@@ -60,19 +60,21 @@ public class DaoVendedor {
              System.out.println(ex.toString());   
         }
     }
-    public  Vendedor consultar (String sigla) {
+    
+    /////////////////////////////////////////////////ALTERAR A PARTIR DAQUI////////////////////////////////////////////////////
+    public  Vendedor consultar (String cpf) {
         Vendedor v = null;
        
         PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement("SELECT * from tbvendedor where " +
                                                  "Cpf_Vend = ?");
- /////////////////////////////////////////////////ALTERAR A PARTIR DAQUI////////////////////////////////////////////////////           
-            ps.setString(1, sigla);
+            
+            ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
            
             if (rs.next() == true) {
-                v = new Departamento (sigla, rs.getString("Nome_Dep"));
+                v = new Vendedor (cpf, rs.getString("Cpf_Vend"));
             }
         }
         catch (SQLException ex) { 
