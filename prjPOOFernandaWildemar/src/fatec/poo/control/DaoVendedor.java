@@ -60,8 +60,7 @@ public class DaoVendedor {
              System.out.println(ex.toString());   
         }
     }
-    
-    /////////////////////////////////////////////////ALTERAR A PARTIR DAQUI////////////////////////////////////////////////////
+
     public  Vendedor consultar (String cpf) {
         Vendedor v = null;
        
