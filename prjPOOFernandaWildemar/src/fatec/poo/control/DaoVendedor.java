@@ -74,12 +74,25 @@ public class DaoVendedor {
             ResultSet rs = ps.executeQuery();
            
             if (rs.next() == true) {
-                v = new Vendedor (cpf, rs.getString("Cpf_Vend"));
+                v = new Vendedor (cpf, rs.getString("Nome_Vend"), rs.getDouble("SalarioBase_Vend"));
             }
         }
         catch (SQLException ex) { 
              System.out.println(ex.toString());   
         }
         return (v);
+    }
+    
+     public void excluir(Vendedor vendedor) {
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement("DELETE FROM tbvendedor where Cpf_Vend = ?");
+            
+            ps.setString(1, vendedor.getCpf());
+                      
+            ps.execute();
+        } catch (SQLException ex) {
+             System.out.println(ex.toString());   
+        }
     }
 }
