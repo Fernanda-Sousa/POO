@@ -209,9 +209,9 @@ public class GUIProduto extends javax.swing.JFrame {
             txtCodigo.setEnabled(true);
             txtCodigo.requestFocus();
             txtDescricao.setEnabled(false);
-            txtEstoqueMinimo.setEditable(false);
-            txtPrecoUnitario.setEditable(false);
-            txtQtdeDisponivel.setEditable(false);        
+            txtEstoqueMinimo.setEnabled(false);
+            txtPrecoUnitario.setEnabled(false);
+            txtQtdeDisponivel.setEnabled(false);        
 
             btnIncluir.setEnabled(false);
             btnConsultar.setEnabled(true);
@@ -246,7 +246,7 @@ public class GUIProduto extends javax.swing.JFrame {
                txtDescricao.requestFocus();
                txtEstoqueMinimo.setEnabled(true);
                txtPrecoUnitario.setEnabled(true);
-               txtQtdeDisponivel.setEditable(true);
+               txtQtdeDisponivel.setEnabled(true);
 
                btnConsultar.setEnabled(false);
                btnAlterar.setEnabled(true);
@@ -272,9 +272,9 @@ public class GUIProduto extends javax.swing.JFrame {
         txtCodigo.setEnabled(true);
         txtCodigo.requestFocus();
         txtDescricao.setEnabled(false);
-        txtEstoqueMinimo.setEditable(false);
-        txtPrecoUnitario.setEditable(false);
-        txtQtdeDisponivel.setEditable(false);        
+        txtEstoqueMinimo.setEnabled(false);
+        txtPrecoUnitario.setEnabled(false);
+        txtQtdeDisponivel.setEnabled(false);        
         
         btnIncluir.setEnabled(false);
         btnConsultar.setEnabled(true);
@@ -304,9 +304,9 @@ public class GUIProduto extends javax.swing.JFrame {
         txtCodigo.setEnabled(true);
         txtCodigo.requestFocus();
         txtDescricao.setEnabled(false);
-        txtEstoqueMinimo.setEditable(false);
-        txtPrecoUnitario.setEditable(false);
-        txtQtdeDisponivel.setEditable(false);        
+        txtEstoqueMinimo.setEnabled(false);
+        txtPrecoUnitario.setEnabled(false);
+        txtQtdeDisponivel.setEnabled(false);        
         
         btnIncluir.setEnabled(false);
         btnConsultar.setEnabled(true);

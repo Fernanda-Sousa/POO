@@ -402,12 +402,12 @@ public class GUIVendedor extends javax.swing.JFrame {
                txtNome.requestFocus();
                txtEndereco.setEnabled(true);
                txtCidade.setEnabled(true);
-               txtCEP.setEditable(true);
-               txtTelDDD.setEditable(true);
-               txtTelefone.setEditable(true);
-               txtSalarioBase.setEditable(true);
-               txtTaxaComissao.setEditable(true);
-               cbxUF.setEditable(true);
+               txtCEP.setEnabled(true);
+               txtTelDDD.setEnabled(true);
+               txtTelefone.setEnabled(true);
+               txtSalarioBase.setEnabled(true);
+               txtTaxaComissao.setEnabled(true);
+               cbxUF.setEnabled(true);
 
                btnConsultar.setEnabled(false);
                btnAlterar.setEnabled(true);
@@ -424,22 +424,44 @@ public class GUIVendedor extends javax.swing.JFrame {
         vendedor.setDdd(txtTelDDD.getText());
         vendedor.setTelefone(txtTelefone.getText());
         vendedor.setComissao(Double.parseDouble(txtTaxaComissao.getText()));
-        vendedor.setUf(cbxUF.());
+        vendedor.setUf(String.valueOf(cbxUF.getSelectedItem()));
         
-        daoProduto.inserir(produto);
+        daoVendedor.inserir(vendedor);
          
-        txtCodigo.setText("");
-        txtDescricao.setText("");
-        txtEstoqueMinimo.setText("");
-        txtPrecoUnitario.setText("");
-        txtQtdeDisponivel.setText("");
-                
+        txtCPF.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtCidade.setText("");
+        txtCEP.setText("");
+        txtTelDDD.setText("");
+        txtTelefone.setText("");
+        txtSalarioBase.setText("");
+        txtTaxaComissao.setText("");
+        cbxUF.setSelectedItem("");        
+        
+        txtCPF.setEnabled(true);
+        txtCPF.requestFocus();
+        txtNome.setEnabled(false);
+        txtEndereco.setEnabled(false);
+        txtCidade.setEnabled(false);
+        txtCEP.setEnabled(false);
+        txtTelDDD.setEnabled(false);
+        txtTelefone.setEnabled(false);
+        txtSalarioBase.setEnabled(false);
+        txtTaxaComissao.setEnabled(false);
+        cbxUF.setEnabled(false);
+
+        btnConsultar.setEnabled(false);
+        btnAlterar.setEnabled(true);
+        btnExcluir.setEnabled(true);
+        
+        
         txtCodigo.setEnabled(true);
         txtCodigo.requestFocus();
         txtDescricao.setEnabled(false);
-        txtEstoqueMinimo.setEditable(false);
-        txtPrecoUnitario.setEditable(false);
-        txtQtdeDisponivel.setEditable(false);        
+        txtEstoqueMinimo.setEnabled(false);
+        txtPrecoUnitario.setEnabled(false);
+        txtQtdeDisponivel.setEnabled(false);        
         
         btnIncluir.setEnabled(false);
         btnConsultar.setEnabled(true);
