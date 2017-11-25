@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -451,29 +452,87 @@ public class GUIVendedor extends javax.swing.JFrame {
         txtTaxaComissao.setEnabled(false);
         cbxUF.setEnabled(false);
 
-        btnConsultar.setEnabled(false);
-        btnAlterar.setEnabled(true);
-        btnExcluir.setEnabled(true);
-        
-        
-        txtCodigo.setEnabled(true);
-        txtCodigo.requestFocus();
-        txtDescricao.setEnabled(false);
-        txtEstoqueMinimo.setEnabled(false);
-        txtPrecoUnitario.setEnabled(false);
-        txtQtdeDisponivel.setEnabled(false);        
-        
-        btnIncluir.setEnabled(false);
         btnConsultar.setEnabled(true);
+        btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
+        
     }//GEN-LAST:event_btnIncluirActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0){//Sim
+            vendedor.setNome(txtNome.getText());
+            vendedor.setEndereco(txtEndereco.getText());
+            vendedor.setCidade(txtCidade.getText());
+            vendedor.setCep(txtCEP.getText());
+            vendedor.setDdd(txtTelDDD.getText());
+            vendedor.setTelefone(txtTelefone.getText());
+            vendedor.setComissao(Double.parseDouble(txtTaxaComissao.getText()));
+            vendedor.setUf(String.valueOf(cbxUF.getSelectedItem()));
+     
+            daoVendedor.alterar(vendedor);
+        } 
+        
+        txtCPF.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtCidade.setText("");
+        txtCEP.setText("");
+        txtTelDDD.setText("");
+        txtTelefone.setText("");
+        txtSalarioBase.setText("");
+        txtTaxaComissao.setText("");
+        cbxUF.setSelectedItem("");
+        
+        txtCPF.setEnabled(true);
+        txtCPF.requestFocus();
+        txtNome.setEnabled(false);
+        txtEndereco.setEnabled(false);
+        txtCidade.setEnabled(false);
+        txtCEP.setEnabled(false);
+        txtTelDDD.setEnabled(false);
+        txtTelefone.setEnabled(false);
+        txtSalarioBase.setEnabled(false);
+        txtTaxaComissao.setEnabled(false);
+        cbxUF.setEnabled(false);
+
+        btnConsultar.setEnabled(true);
+        btnIncluir.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0){
+            daoVendedor.excluir(vendedor); 
+            
+            txtCPF.setText("");
+            txtNome.setText("");
+            txtEndereco.setText("");
+            txtCidade.setText("");
+            txtCEP.setText("");
+            txtTelDDD.setText("");
+            txtTelefone.setText("");
+            txtSalarioBase.setText("");
+            txtTaxaComissao.setText("");
+            cbxUF.setSelectedItem("");
+
+            txtCPF.setEnabled(true);
+            txtCPF.requestFocus();
+            txtNome.setEnabled(false);
+            txtEndereco.setEnabled(false);
+            txtCidade.setEnabled(false);
+            txtCEP.setEnabled(false);
+            txtTelDDD.setEnabled(false);
+            txtTelefone.setEnabled(false);
+            txtSalarioBase.setEnabled(false);
+            txtTaxaComissao.setEnabled(false);
+            cbxUF.setEnabled(false);
+
+            btnConsultar.setEnabled(true);
+            btnIncluir.setEnabled(false);
+            btnExcluir.setEnabled(false);
+            
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
