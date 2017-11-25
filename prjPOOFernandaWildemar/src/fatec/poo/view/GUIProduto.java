@@ -184,11 +184,11 @@ public class GUIProduto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-     private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
         conexao = new Conexao("BD1513015","BD1513015");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
         conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
-         daoProduto = new DaoProduto(conexao.conectar());
+        daoProduto = new DaoProduto(conexao.conectar());
     }
     
     private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   

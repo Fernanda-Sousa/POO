@@ -1,6 +1,11 @@
 
 package fatec.poo.view;
 
+import fatec.poo.control.Conexao;
+import fatec.poo.control.DaoProduto;
+import fatec.poo.control.DaoVendedor;
+import fatec.poo.model.Produto;
+import fatec.poo.model.Vendedor;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -312,6 +317,18 @@ public class GUIVendedor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
+        conexao = new Conexao("BD1513015","BD1513015");
+        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        daoVendedor = new DaoVendedor(conexao.conectar());
+    }
+    
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
+        conexao.fecharConexao();
+        dispose();
+    }
+    
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeActionPerformed
@@ -349,11 +366,84 @@ public class GUIVendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxUFActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-        // TODO add your handling code here:
+       vendedor = null;
+       vendedor = daoVendedor.consultar(txtCPF.getText());
+       
+       if (/* TODO validar o CPF*/){
+            if (vendedor == null){
+                txtCPF.setEnabled(false);
+                txtNome.setEnabled(true);
+                txtNome.requestFocus();
+                txtEndereco.setEnabled(true);
+                txtCidade.setEnabled(true);
+                txtCEP.setEnabled(true);
+                txtTelDDD.setEnabled(true);
+                txtTelefone.setEnabled(true);
+                txtSalarioBase.setEnabled(true);
+                txtTaxaComissao.setEnabled(true);
+                cbxUF.setEnabled(true);
+                
+                btnConsultar.setEnabled(false);
+                btnIncluir.setEnabled(true);
+            }
+            else{
+               txtNome.setText(vendedor.getNome());
+               txtEndereco.setText(vendedor.getEndereco());
+               txtCidade.setText(vendedor.getCidade());
+               txtCEP.setText(vendedor.getCep());
+               txtTelDDD.setText(vendedor.getDdd());
+               txtTelefone.setText(vendedor.getTelefone());
+               txtSalarioBase.setText(String.valueOf(vendedor.getSalarioBase()));
+               txtTaxaComissao.setText(String.valueOf(vendedor.getComissao()));
+               cbxUF.setSelectedItem(vendedor.getUf());
+               
+               txtCPF.setEnabled(false); 
+               txtNome.setEnabled(true);
+               txtNome.requestFocus();
+               txtEndereco.setEnabled(true);
+               txtCidade.setEnabled(true);
+               txtCEP.setEditable(true);
+               txtTelDDD.setEditable(true);
+               txtTelefone.setEditable(true);
+               txtSalarioBase.setEditable(true);
+               txtTaxaComissao.setEditable(true);
+               cbxUF.setEditable(true);
+
+               btnConsultar.setEnabled(false);
+               btnAlterar.setEnabled(true);
+               btnExcluir.setEnabled(true);
+            } 
+       }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
-        // TODO add your handling code here:
+        vendedor = new Vendedor(txtCPF.getText(), txtNome.getText(), Double.parseDouble(txtSalarioBase.getText()));
+        vendedor.setEndereco(txtEndereco.getText());
+        vendedor.setCidade(txtCidade.getText());
+        vendedor.setCep(txtCEP.getText());
+        vendedor.setDdd(txtTelDDD.getText());
+        vendedor.setTelefone(txtTelefone.getText());
+        vendedor.setComissao(Double.parseDouble(txtTaxaComissao.getText()));
+        vendedor.setUf(cbxUF.());
+        
+        daoProduto.inserir(produto);
+         
+        txtCodigo.setText("");
+        txtDescricao.setText("");
+        txtEstoqueMinimo.setText("");
+        txtPrecoUnitario.setText("");
+        txtQtdeDisponivel.setText("");
+                
+        txtCodigo.setEnabled(true);
+        txtCodigo.requestFocus();
+        txtDescricao.setEnabled(false);
+        txtEstoqueMinimo.setEditable(false);
+        txtPrecoUnitario.setEditable(false);
+        txtQtdeDisponivel.setEditable(false);        
+        
+        btnIncluir.setEnabled(false);
+        btnConsultar.setEnabled(true);
+        btnExcluir.setEnabled(false);
     }//GEN-LAST:event_btnIncluirActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
@@ -433,5 +523,7 @@ public class GUIVendedor extends javax.swing.JFrame {
     private javax.swing.JTextField txtTelDDD;
     private javax.swing.JTextField txtTelefone;
     // End of variables declaration//GEN-END:variables
-
+    private DaoVendedor daoVendedor = null;
+    private Vendedor vendedor = null;
+    private Conexao conexao = null;
 }
