@@ -1,5 +1,10 @@
 package fatec.poo.view;
 
+import fatec.poo.control.Conexao;
+import fatec.poo.control.DaoProduto;
+import fatec.poo.model.Produto;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Fernanda // Wildemar
@@ -179,16 +184,101 @@ public class GUIProduto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+     private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
+        conexao = new Conexao("BD1513015","BD1513015");
+        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+         daoProduto = new DaoProduto(conexao.conectar());
+    }
+    
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
+        conexao.fecharConexao();
+        dispose();
+    } 
+    
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0){
+            daoProduto.excluir(produto); 
+            
+            txtCodigo.setText("");
+            txtDescricao.setText("");
+            txtEstoqueMinimo.setText("");
+            txtPrecoUnitario.setText("");
+            txtQtdeDisponivel.setText("");
+
+            txtCodigo.setEnabled(true);
+            txtCodigo.requestFocus();
+            txtDescricao.setEnabled(false);
+            txtEstoqueMinimo.setEditable(false);
+            txtPrecoUnitario.setEditable(false);
+            txtQtdeDisponivel.setEditable(false);        
+
+            btnIncluir.setEnabled(false);
+            btnConsultar.setEnabled(true);
+            btnExcluir.setEnabled(false);
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-        // TODO add your handling code here:
+       produto = null;
+       produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
+       
+       if (/* TODO validar o codigo*/){
+            if (produto == null){
+                txtCodigo.setEnabled(false);
+                txtDescricao.setEnabled(true);
+                txtDescricao.requestFocus();
+                txtEstoqueMinimo.setEnabled(true);
+                txtPrecoUnitario.setEnabled(true);
+                txtQtdeDisponivel.setEnabled(true);
+
+                btnConsultar.setEnabled(false);
+                btnIncluir.setEnabled(true);
+            }
+            else{
+               txtDescricao.setText(produto.getDescricao());
+               txtQtdeDisponivel.setText(String.valueOf(produto.getQtdeDisponivel()));
+               txtPrecoUnitario.setText(String.valueOf(produto.getPrecoUnit()));
+               txtEstoqueMinimo.setText(String.valueOf(produto.getEstoqueMin()));
+
+               txtCodigo.setEnabled(false); 
+               txtDescricao.setEnabled(true);
+               txtDescricao.requestFocus();
+               txtEstoqueMinimo.setEnabled(true);
+               txtPrecoUnitario.setEnabled(true);
+               txtQtdeDisponivel.setEditable(true);
+
+               btnConsultar.setEnabled(false);
+               btnAlterar.setEnabled(true);
+               btnExcluir.setEnabled(true);
+            } 
+       }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
-        // TODO add your handling code here:
+        produto = new Produto(Integer.parseInt(txtCodigo.getText()), txtDescricao.getText());
+        produto.setEstoqueMin(Integer.parseInt(txtEstoqueMinimo.getText()));
+        produto.setPrecoUnit(Double.parseDouble(txtPrecoUnitario.getText()));
+        produto.setQtdeDisponivel(Integer.parseInt(txtQtdeDisponivel.getText()));
+        
+        daoProduto.inserir(produto);
+         
+        txtCodigo.setText("");
+        txtDescricao.setText("");
+        txtEstoqueMinimo.setText("");
+        txtPrecoUnitario.setText("");
+        txtQtdeDisponivel.setText("");
+                
+        txtCodigo.setEnabled(true);
+        txtCodigo.requestFocus();
+        txtDescricao.setEnabled(false);
+        txtEstoqueMinimo.setEditable(false);
+        txtPrecoUnitario.setEditable(false);
+        txtQtdeDisponivel.setEditable(false);        
+        
+        btnIncluir.setEnabled(false);
+        btnConsultar.setEnabled(true);
+        btnExcluir.setEnabled(false);
     }//GEN-LAST:event_btnIncluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
@@ -196,7 +286,31 @@ public class GUIProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0){//Sim
+           produto.setDescricao(txtDescricao.getText());
+           produto.setEstoqueMin(Integer.parseInt(txtEstoqueMinimo.getText()));
+           produto.setPrecoUnit(Double.parseDouble(txtPrecoUnitario.getText()));
+           produto.setQtdeDisponivel(Integer.parseInt(txtQtdeDisponivel.getText()));
+           
+           daoProduto.alterar(produto);
+        } 
+        
+        txtCodigo.setText("");
+        txtDescricao.setText("");
+        txtEstoqueMinimo.setText("");
+        txtPrecoUnitario.setText("");
+        txtQtdeDisponivel.setText("");
+        
+        txtCodigo.setEnabled(true);
+        txtCodigo.requestFocus();
+        txtDescricao.setEnabled(false);
+        txtEstoqueMinimo.setEditable(false);
+        txtPrecoUnitario.setEditable(false);
+        txtQtdeDisponivel.setEditable(false);        
+        
+        btnIncluir.setEnabled(false);
+        btnConsultar.setEnabled(true);
+        btnExcluir.setEnabled(false);        
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     /**
@@ -251,4 +365,7 @@ public class GUIProduto extends javax.swing.JFrame {
     private javax.swing.JTextField txtPrecoUnitario;
     private javax.swing.JTextField txtQtdeDisponivel;
     // End of variables declaration//GEN-END:variables
+    private DaoProduto daoProduto = null;
+    private Produto produto = null;
+    private Conexao conexao = null;
 }
