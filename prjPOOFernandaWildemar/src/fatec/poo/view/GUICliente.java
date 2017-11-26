@@ -1,5 +1,10 @@
 package fatec.poo.view;
 
+import fatec.poo.control.Conexao;
+import fatec.poo.control.DaoCliente;
+import fatec.poo.model.Cliente;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Fernanda // Wildemar
@@ -303,6 +308,17 @@ public class GUICliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
+        conexao = new Conexao("BD1513015","BD1513015");
+        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        daoCliente = new DaoCliente(conexao.conectar());
+    }
+    
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
+        conexao.fecharConexao();
+        dispose();
+    }
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeActionPerformed
@@ -332,7 +348,50 @@ public class GUICliente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCEPActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-        // TODO add your handling code here:
+       cliente = null;
+       cliente = daoCliente.consultar(txtCPF.getText());
+       
+       if (/* TODO validar o CPF*/){
+            if (cliente == null){
+                txtCPF.setEnabled(false);
+                txtNome.setEnabled(true);
+                txtNome.requestFocus();
+                txtEndereco.setEnabled(true);
+                txtCidade.setEnabled(true);
+                txtCEP.setEnabled(true);
+                txtTelDDD.setEnabled(true);
+                txtTelefone.setEnabled(true);
+                txtLimiteCredito.setEnabled(true);
+                cbxUF.setEnabled(true);
+                btnConsultar.setEnabled(false);
+                btnIncluir.setEnabled(true);
+            }
+            else{
+               txtNome.setText(cliente.getNome());
+               txtEndereco.setText(cliente.getEndereco());
+               txtCidade.setText(cliente.getCidade());
+               txtCEP.setText(cliente.getCep());
+               txtTelDDD.setText(cliente.getDdd());
+               txtTelefone.setText(cliente.getTelefone());
+               txtLimiteCredito.setText(String.valueOf(cliente.getLimiteCred()));
+               cbxUF.setSelectedItem(cliente.getUf());
+               
+               txtCPF.setEnabled(false); 
+               txtNome.setEnabled(true);
+               txtNome.requestFocus();
+               txtEndereco.setEnabled(true);
+               txtCidade.setEnabled(true);
+               txtCEP.setEnabled(true);
+               txtTelDDD.setEnabled(true);
+               txtTelefone.setEnabled(true);
+               txtLimiteCredito.setEnabled(true);
+               cbxUF.setEnabled(true);
+
+               btnConsultar.setEnabled(false);
+               btnAlterar.setEnabled(true);
+               btnExcluir.setEnabled(true);
+            } 
+       }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void cbxUFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxUFActionPerformed
@@ -340,15 +399,115 @@ public class GUICliente extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxUFActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
-        // TODO add your handling code here:
+        cliente = new Cliente(txtCPF.getText(), txtNome.getText(), Double.parseDouble(txtLimiteCredito.getText()));
+        cliente.setEndereco(txtEndereco.getText());
+        cliente.setCidade(txtCidade.getText());
+        cliente.setCep(txtCEP.getText());
+        cliente.setDdd(txtTelDDD.getText());
+        cliente.setTelefone(txtTelefone.getText());
+        cliente.setLimiteCred(Double.parseDouble(txtLimiteCredito.getText()));
+        cliente.setUf(String.valueOf(cbxUF.getSelectedItem()));
+        
+        daoCliente.inserir(cliente);
+         
+        txtCPF.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtCidade.setText("");
+        txtCEP.setText("");
+        txtTelDDD.setText("");
+        txtTelefone.setText("");
+        txtLimiteCredito.setText("");
+        cbxUF.setSelectedItem("");        
+        
+        txtCPF.setEnabled(true);
+        txtCPF.requestFocus();
+        txtNome.setEnabled(false);
+        txtEndereco.setEnabled(false);
+        txtCidade.setEnabled(false);
+        txtCEP.setEnabled(false);
+        txtTelDDD.setEnabled(false);
+        txtTelefone.setEnabled(false);
+        txtLimiteCredito.setEnabled(false);
+        cbxUF.setEnabled(false);
+
+        btnConsultar.setEnabled(true);
+        btnIncluir.setEnabled(false);
+        btnExcluir.setEnabled(false);
     }//GEN-LAST:event_btnIncluirActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0){//Sim
+            cliente.setNome(txtNome.getText());
+            cliente.setEndereco(txtEndereco.getText());
+            cliente.setCidade(txtCidade.getText());
+            cliente.setCep(txtCEP.getText());
+            cliente.setDdd(txtTelDDD.getText());
+            cliente.setTelefone(txtTelefone.getText());
+            cliente.setLimiteCred(Double.parseDouble(txtLimiteCredito.getText()));
+            cliente.setUf(String.valueOf(cbxUF.getSelectedItem()));
+     
+            daoCliente.alterar(cliente);
+        } 
+        
+        txtCPF.setText("");
+        txtNome.setText("");
+        txtEndereco.setText("");
+        txtCidade.setText("");
+        txtCEP.setText("");
+        txtTelDDD.setText("");
+        txtTelefone.setText("");
+        txtLimiteCredito.setText("");
+        cbxUF.setSelectedItem("");
+        
+        txtCPF.setEnabled(true);
+        txtCPF.requestFocus();
+        txtNome.setEnabled(false);
+        txtEndereco.setEnabled(false);
+        txtCidade.setEnabled(false);
+        txtCEP.setEnabled(false);
+        txtTelDDD.setEnabled(false);
+        txtTelefone.setEnabled(false);
+        txtLimiteCredito.setEnabled(false);
+        cbxUF.setEnabled(false);
+
+        btnConsultar.setEnabled(true);
+        btnIncluir.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0){
+            daoCliente.excluir(cliente); 
+            
+            txtCPF.setText("");
+            txtNome.setText("");
+            txtEndereco.setText("");
+            txtCidade.setText("");
+            txtCEP.setText("");
+            txtTelDDD.setText("");
+            txtTelefone.setText("");
+            txtLimiteCredito.setText("");
+            cbxUF.setSelectedItem("");
+
+            txtCPF.setEnabled(true);
+            txtCPF.requestFocus();
+            txtNome.setEnabled(false);
+            txtEndereco.setEnabled(false);
+            txtCidade.setEnabled(false);
+            txtCEP.setEnabled(false);
+            txtTelDDD.setEnabled(false);
+            txtTelefone.setEnabled(false);
+            txtLimiteCredito.setEnabled(false);
+            cbxUF.setEnabled(false);
+
+            btnConsultar.setEnabled(true);
+            btnIncluir.setEnabled(false);
+            btnExcluir.setEnabled(false);
+            
+        }
+
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
@@ -416,4 +575,7 @@ public class GUICliente extends javax.swing.JFrame {
     private javax.swing.JTextField txtTelDDD;
     private javax.swing.JTextField txtTelefone;
     // End of variables declaration//GEN-END:variables
+    private DaoCliente daoCliente = null;
+    private Cliente cliente = null;
+    private Conexao conexao = null;
 }

@@ -3,7 +3,9 @@ package fatec.poo.view;
 import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoProduto;
 import fatec.poo.model.Produto;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -220,31 +222,38 @@ public class GUIProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-       produto = null;
-       produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
-       
-       if (/* TODO validar o codigo*/){
-            if (produto == null){
-                txtCodigo.setEnabled(false);
-                txtDescricao.setEnabled(true);
-                txtDescricao.requestFocus();
-                txtEstoqueMinimo.setEnabled(true);
-                txtPrecoUnitario.setEnabled(true);
-                txtQtdeDisponivel.setEnabled(true);
+        //produto = null;
+        //produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
+        
+        String s = txtCodigo.getText();
+        try{
+            Integer.parseInt(s);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog (null, "Codigo Inválido. Digite um valor numérico!","Código Invalido",JOptionPane.WARNING_MESSAGE);
+            txtCodigo.requestFocus();
+            txtCodigo.setText(null);
+        }
+        if (produto == null){
+            txtCodigo.setEnabled(false);
+            txtDescricao.setEnabled(true);
+            txtDescricao.requestFocus();
+            txtEstoqueMinimo.setEnabled(true);
+            txtPrecoUnitario.setEnabled(true);
+            txtQtdeDisponivel.setEnabled(true);
 
-                btnConsultar.setEnabled(false);
-                btnIncluir.setEnabled(true);
-            }
-            else{
-               txtDescricao.setText(produto.getDescricao());
-               txtQtdeDisponivel.setText(String.valueOf(produto.getQtdeDisponivel()));
-               txtPrecoUnitario.setText(String.valueOf(produto.getPrecoUnit()));
-               txtEstoqueMinimo.setText(String.valueOf(produto.getEstoqueMin()));
+            btnConsultar.setEnabled(false);
+            btnIncluir.setEnabled(true);
+        }
+        else{
+            txtDescricao.setText(produto.getDescricao());
+            txtQtdeDisponivel.setText(String.valueOf(produto.getQtdeDisponivel()));
+            txtPrecoUnitario.setText(String.valueOf(produto.getPrecoUnit()));
+            txtEstoqueMinimo.setText(String.valueOf(produto.getEstoqueMin()));
 
-               txtCodigo.setEnabled(false); 
-               txtDescricao.setEnabled(true);
-               txtDescricao.requestFocus();
-               txtEstoqueMinimo.setEnabled(true);
+            txtCodigo.setEnabled(false); 
+            txtDescricao.setEnabled(true);
+            txtDescricao.requestFocus();
+            txtEstoqueMinimo.setEnabled(true);
                txtPrecoUnitario.setEnabled(true);
                txtQtdeDisponivel.setEnabled(true);
 
@@ -252,7 +261,6 @@ public class GUIProduto extends javax.swing.JFrame {
                btnAlterar.setEnabled(true);
                btnExcluir.setEnabled(true);
             } 
-       }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
@@ -263,11 +271,11 @@ public class GUIProduto extends javax.swing.JFrame {
         
         daoProduto.inserir(produto);
          
-        txtCodigo.setText("");
-        txtDescricao.setText("");
-        txtEstoqueMinimo.setText("");
-        txtPrecoUnitario.setText("");
-        txtQtdeDisponivel.setText("");
+        txtCodigo.setText(null);
+        txtDescricao.setText(null);
+        txtEstoqueMinimo.setText(null);
+        txtPrecoUnitario.setText(null);
+        txtQtdeDisponivel.setText(null);
                 
         txtCodigo.setEnabled(true);
         txtCodigo.requestFocus();
@@ -295,11 +303,11 @@ public class GUIProduto extends javax.swing.JFrame {
            daoProduto.alterar(produto);
         } 
         
-        txtCodigo.setText("");
-        txtDescricao.setText("");
-        txtEstoqueMinimo.setText("");
-        txtPrecoUnitario.setText("");
-        txtQtdeDisponivel.setText("");
+        txtCodigo.setText(null);
+        txtDescricao.setText(null);
+        txtEstoqueMinimo.setText(null);
+        txtPrecoUnitario.setText(null);
+        txtQtdeDisponivel.setText(null);
         
         txtCodigo.setEnabled(true);
         txtCodigo.requestFocus();
