@@ -10,9 +10,10 @@
             <file>file:/C:/Users/Mielias/Documents/ELIAS/Fatec/POO/Trabalho/prjPOOFernandaWildemar/src/fatec/poo/model/Cliente.java</file>
         </group>
         <group>
-            <file>file:/C:/Users/FernandaPereiradosSa/Documents/GitHub/POO1/prjPOOFernandaWildemar/src/fatec/poo/control/DaoProduto.java</file>
             <file>file:/C:/Users/FernandaPereiradosSa/Documents/GitHub/POO1/prjPOOFernandaWildemar/src/fatec/poo/model/Produto.java</file>
-            <file>file:/C:/Users/FernandaPereiradosSa/Documents/GitHub/POO1/prjPOOFernandaWildemar/src/fatec/poo/control/Conexao.java</file>
+            <file>file:/C:/Users/FernandaPereiradosSa/Documents/GitHub/POO1/prjPOOFernandaWildemar/src/fatec/poo/view/GUIProduto.java</file>
+            <file>file:/C:/Users/FernandaPereiradosSa/Documents/GitHub/POO1/prjPOOFernandaWildemar/src/fatec/poo/view/GUIVendedor.java</file>
+            <file>file:/C:/Users/FernandaPereiradosSa/Documents/GitHub/POO1/prjPOOFernandaWildemar/src/fatec/poo/model/Vendedor.java</file>
             <file>file:/C:/Users/FernandaPereiradosSa/Documents/GitHub/POO1/prjPOOFernandaWildemar/src/fatec/poo/model/Pessoa.java</file>
         </group>
     </open-files>
