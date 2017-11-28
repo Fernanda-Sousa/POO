@@ -1,8 +1,12 @@
 package fatec.poo.view;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoProduto;
 import fatec.poo.model.Produto;
+import static java.awt.SystemColor.text;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
@@ -53,6 +57,12 @@ public class GUIProduto extends javax.swing.JFrame {
         jLabel2.setText("Descrição");
 
         jLabel3.setText("Qtde. Disponível");
+
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoActionPerformed(evt);
+            }
+        });
 
         txtDescricao.setEnabled(false);
 
@@ -222,17 +232,20 @@ public class GUIProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-        //produto = null;
-        //produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
+        produto = null;
         
-        String s = txtCodigo.getText();
         try{
-            Integer.parseInt(s);
+            if(Integer.parseInt(txtCodigo.getText()) % 1 == 0){
+                produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
+            }
         }catch(Exception e){
             JOptionPane.showMessageDialog (null, "Codigo Inválido. Digite um valor numérico!","Código Invalido",JOptionPane.WARNING_MESSAGE);
             txtCodigo.requestFocus();
-            txtCodigo.setText(null);
+            txtCodigo.setText("");
         }
+
+       //  Verifique se está conseguindo pesquisar o banco
+
         if (produto == null){
             txtCodigo.setEnabled(false);
             txtDescricao.setEnabled(true);
@@ -254,13 +267,14 @@ public class GUIProduto extends javax.swing.JFrame {
             txtDescricao.setEnabled(true);
             txtDescricao.requestFocus();
             txtEstoqueMinimo.setEnabled(true);
-               txtPrecoUnitario.setEnabled(true);
-               txtQtdeDisponivel.setEnabled(true);
+            txtPrecoUnitario.setEnabled(true);
+            txtQtdeDisponivel.setEnabled(true);
 
-               btnConsultar.setEnabled(false);
-               btnAlterar.setEnabled(true);
-               btnExcluir.setEnabled(true);
-            } 
+            btnConsultar.setEnabled(false);
+            btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
+        } 
+  
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
@@ -321,6 +335,10 @@ public class GUIProduto extends javax.swing.JFrame {
         btnExcluir.setEnabled(false);        
     }//GEN-LAST:event_btnAlterarActionPerformed
 
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
+     
+    }//GEN-LAST:event_txtCodigoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -376,4 +394,5 @@ public class GUIProduto extends javax.swing.JFrame {
     private DaoProduto daoProduto = null;
     private Produto produto = null;
     private Conexao conexao = null;
+//    private static final Pattern codigo = Pattern.compile("([\\d]+)");
 }
