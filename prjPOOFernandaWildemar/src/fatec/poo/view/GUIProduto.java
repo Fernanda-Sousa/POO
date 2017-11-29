@@ -51,6 +51,14 @@ public class GUIProduto extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro de Produto");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Código");
 
@@ -196,18 +204,7 @@ public class GUIProduto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
-        conexao = new Conexao("BD1513015","BD1513015");
-        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
-        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
-        daoProduto = new DaoProduto(conexao.conectar());
-    }
-    
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
-        conexao.fecharConexao();
-        dispose();
-    } 
-    
+       
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0){
             daoProduto.excluir(produto); 
@@ -235,28 +232,18 @@ public class GUIProduto extends javax.swing.JFrame {
         produto = null;
         
         try{
-            if(Integer.parseInt(txtCodigo.getText()) % 1 == 0){
-                produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
+            produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
+            if (produto == null){
+                txtCodigo.setEnabled(false);
+                txtDescricao.setEnabled(true);
+                txtDescricao.requestFocus();
+                txtEstoqueMinimo.setEnabled(true);
+                txtPrecoUnitario.setEnabled(true);
+                txtQtdeDisponivel.setEnabled(true);
+
+                btnConsultar.setEnabled(false);
+                btnIncluir.setEnabled(true);
             }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog (null, "Codigo Inválido. Digite um valor numérico!","Código Invalido",JOptionPane.WARNING_MESSAGE);
-            txtCodigo.requestFocus();
-            txtCodigo.setText("");
-        }
-
-       //  Verifique se está conseguindo pesquisar o banco
-
-        if (produto == null){
-            txtCodigo.setEnabled(false);
-            txtDescricao.setEnabled(true);
-            txtDescricao.requestFocus();
-            txtEstoqueMinimo.setEnabled(true);
-            txtPrecoUnitario.setEnabled(true);
-            txtQtdeDisponivel.setEnabled(true);
-
-            btnConsultar.setEnabled(false);
-            btnIncluir.setEnabled(true);
-        }
         else{
             txtDescricao.setText(produto.getDescricao());
             txtQtdeDisponivel.setText(String.valueOf(produto.getQtdeDisponivel()));
@@ -274,7 +261,12 @@ public class GUIProduto extends javax.swing.JFrame {
             btnAlterar.setEnabled(true);
             btnExcluir.setEnabled(true);
         } 
-  
+        
+       }catch(Exception e){
+            JOptionPane.showMessageDialog (null, "Codigo Inválido. Digite um valor numérico!","Código Invalido",JOptionPane.WARNING_MESSAGE);
+            txtCodigo.requestFocus();
+            txtCodigo.setText("");
+        }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
@@ -338,6 +330,18 @@ public class GUIProduto extends javax.swing.JFrame {
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
      
     }//GEN-LAST:event_txtCodigoActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        conexao = new Conexao("BD1513015","BD1513015");
+        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        daoProduto = new DaoProduto(conexao.conectar());
+    }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        conexao.fecharConexao();
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

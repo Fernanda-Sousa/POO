@@ -3,6 +3,7 @@ package fatec.poo.view;
 import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoCliente;
 import fatec.poo.model.Cliente;
+import fatec.poo.model.ValidarCpf;
 import javax.swing.JOptionPane;
 
 /**
@@ -54,6 +55,14 @@ public class GUICliente extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro de Cliente");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("CPF");
 
@@ -308,17 +317,9 @@ public class GUICliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
-        conexao = new Conexao("BD1513015","BD1513015");
-        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
-        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
-        daoCliente = new DaoCliente(conexao.conectar());
-    }
     
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
-        conexao.fecharConexao();
-        dispose();
-    }
+    
+   
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeActionPerformed
@@ -350,8 +351,10 @@ public class GUICliente extends javax.swing.JFrame {
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
        cliente = null;
        cliente = daoCliente.consultar(txtCPF.getText());
-       
-       if (/* TODO validar o CPF*/){
+       ValidarCpf valida  = new ValidarCpf();
+       if (valida.validarCpf(txtCPF.getText())){
+        
+        
             if (cliente == null){
                 txtCPF.setEnabled(false);
                 txtNome.setEnabled(true);
@@ -391,9 +394,12 @@ public class GUICliente extends javax.swing.JFrame {
                btnAlterar.setEnabled(true);
                btnExcluir.setEnabled(true);
             } 
+       }else{
+           JOptionPane.showMessageDialog (null, "Codigo Inválido. Digite um valor numérico!","Código Invalido",JOptionPane.WARNING_MESSAGE);  
        }
+    
     }//GEN-LAST:event_btnConsultarActionPerformed
-
+    
     private void cbxUFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxUFActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxUFActionPerformed
@@ -514,6 +520,18 @@ public class GUICliente extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnSairActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        conexao.fecharConexao();
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        conexao = new Conexao("BD1513015","BD1513015");
+        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        daoCliente = new DaoCliente(conexao.conectar());
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -578,4 +596,5 @@ public class GUICliente extends javax.swing.JFrame {
     private DaoCliente daoCliente = null;
     private Cliente cliente = null;
     private Conexao conexao = null;
+    
 }

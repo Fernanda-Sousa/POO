@@ -5,6 +5,7 @@ import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoProduto;
 import fatec.poo.control.DaoVendedor;
 import fatec.poo.model.Produto;
+import fatec.poo.model.ValidarCpf;
 import fatec.poo.model.Vendedor;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -370,7 +371,10 @@ public class GUIVendedor extends javax.swing.JFrame {
        vendedor = null;
        vendedor = daoVendedor.consultar(txtCPF.getText());
        
-       if (/* TODO validar o CPF*/){
+       //if (/* TODO validar o CPF*/){
+       ValidarCpf valida  = new ValidarCpf();
+       if (valida.validarCpf(txtCPF.getText())){
+        
             if (vendedor == null){
                 txtCPF.setEnabled(false);
                 txtNome.setEnabled(true);
@@ -413,7 +417,9 @@ public class GUIVendedor extends javax.swing.JFrame {
                btnConsultar.setEnabled(false);
                btnAlterar.setEnabled(true);
                btnExcluir.setEnabled(true);
-            } 
+            }
+       }else{
+           JOptionPane.showMessageDialog (null, "Codigo Inválido. Digite um valor numérico!","Código Invalido",JOptionPane.WARNING_MESSAGE);  
        }
     }//GEN-LAST:event_btnConsultarActionPerformed
 

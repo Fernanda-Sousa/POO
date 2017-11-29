@@ -21,7 +21,7 @@ public class DaoCliente {
         PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement("INSERT INTO tbcliente(Cpf_Cli, Nome_Cli, Endereco_Cli, Cidade_Cli, Cep_Cli, Uf_Cli, Ddd_Cli, Telefone_Cli, LimiteCred_Cli, LimiteDisp_Cli) VALUES(?,?,?,?,?,?,?,?,?,?)");
-            ps.setString(1, cliente.getCpf());
+            ps.setString(1, cliente.getCep());
             ps.setString(2, cliente.getNome());
             ps.setString(3, cliente.getEndereco());
             ps.setString(4, cliente.getCidade());
