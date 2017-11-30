@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Set;
 
 /**
  *
@@ -21,7 +22,7 @@ public class DaoCliente {
         PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement("INSERT INTO tbcliente(Cpf_Cli, Nome_Cli, Endereco_Cli, Cidade_Cli, Cep_Cli, Uf_Cli, Ddd_Cli, Telefone_Cli, LimiteCred_Cli, LimiteDisp_Cli) VALUES(?,?,?,?,?,?,?,?,?,?)");
-            ps.setString(1, cliente.getCep());
+            ps.setString(1, cliente.getCpf());
             ps.setString(2, cliente.getNome());
             ps.setString(3, cliente.getEndereco());
             ps.setString(4, cliente.getCidade());
@@ -74,6 +75,15 @@ public class DaoCliente {
            
             if (rs.next() == true) {
                 c = new Cliente (cpf, rs.getString("Nome_Cli"), rs.getDouble("LimiteCred_Cli"));
+                c.setCidade(rs.getString("Cidade_Cli"));
+                c.setDdd(rs.getString("Ddd_Cli"));
+                c.setLimiteDisp(rs.getFloat("LimiteDisp_Cli"));
+                c.setTelefone(rs.getString("Telefone_Cli"));
+                c.setUf(rs.getString("Uf_Cli"));
+                c.setCep(rs.getString("Cep_Cli"));
+                c.setEndereco(rs.getString("Endereco_Cli"));
+                
+                
             }
         }
         catch (SQLException ex) { 

@@ -30,7 +30,7 @@ public class Vendedor extends Pessoa {
     }
 
     public void setComissao(double taxaComissao) {
-        this.comissao = this.salarioBase * (taxaComissao / 100);  
+        this.comissao = taxaComissao;  
     }
 
     public void addPedido(Pedido pedido) {

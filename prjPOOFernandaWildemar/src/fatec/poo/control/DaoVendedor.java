@@ -11,12 +11,13 @@ import java.sql.SQLException;
  * @author Fernanda // Wildemar
  */
 public class DaoVendedor {
+
     private Connection conn;
-    
+
     public DaoVendedor(Connection conn) {
-         this.conn = conn;
+        this.conn = conn;
     }
-    
+
     public void inserir(Vendedor vendedor) {
         PreparedStatement ps = null;
         try {
@@ -31,19 +32,19 @@ public class DaoVendedor {
             ps.setString(8, vendedor.getTelefone());
             ps.setDouble(9, vendedor.getSalarioBase());
             ps.setDouble(10, vendedor.getComissao());
-                      
+
             ps.execute();
         } catch (SQLException ex) {
-             System.out.println(ex.toString());   
+            System.out.println(ex.toString());
         }
     }
-    
+
     public void alterar(Vendedor vendedor) {
         PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement("UPDATE tbvendedor set Nome_Vend = ?, Endereco_Vend = ?, Cidade_Vend = ?, Cep_Vend = ?, Uf_Vend = ?, Ddd_Vend = ?, Telefone_Vend = ?, SalarioBase_Vend = ?, Comissao_Vend = ? " 
-                                        + "where Cpf_Vend = ?");
-            
+            ps = conn.prepareStatement("UPDATE tbvendedor set Nome_Vend = ?, Endereco_Vend = ?, Cidade_Vend = ?, Cep_Vend = ?, Uf_Vend = ?, Ddd_Vend = ?, Telefone_Vend = ?, SalarioBase_Vend = ?, Comissao_Vend = ? "
+                    + "where Cpf_Vend = ?");
+
             ps.setString(1, vendedor.getNome());
             ps.setString(2, vendedor.getEndereco());
             ps.setString(3, vendedor.getCidade());
@@ -54,44 +55,50 @@ public class DaoVendedor {
             ps.setDouble(8, vendedor.getSalarioBase());
             ps.setDouble(9, vendedor.getComissao());
             ps.setString(10, vendedor.getCpf());
-           
+
             ps.execute();
         } catch (SQLException ex) {
-             System.out.println(ex.toString());   
+            System.out.println(ex.toString());
         }
     }
 
-    public  Vendedor consultar (String cpf) {
+    public Vendedor consultar(String cpf) {
         Vendedor v = null;
-       
+
         PreparedStatement ps = null;
         try {
-            ps = conn.prepareStatement("SELECT * from tbvendedor where " +
-                                                 "Cpf_Vend = ?");
-            
+            ps = conn.prepareStatement("SELECT * from tbvendedor where "
+                    + "Cpf_Vend = ?");
+
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
-           
+
             if (rs.next() == true) {
-                v = new Vendedor (cpf, rs.getString("Nome_Vend"), rs.getDouble("SalarioBase_Vend"));
+                v = new Vendedor(cpf, rs.getString("Nome_Vend"), rs.getDouble("SalarioBase_Vend"));
+                v.setCidade(rs.getString("Cidade_Vend"));
+                v.setDdd(rs.getString("Ddd_Vend"));
+                v.setTelefone(rs.getString("Telefone_Vend"));
+                v.setUf(rs.getString("Uf_Vend"));
+                v.setCep(rs.getString("Cep_Vend"));
+                v.setComissao(rs.getDouble("Comissao_Vend"));
+                v.setEndereco(rs.getString("Endereco_Vend"));
             }
-        }
-        catch (SQLException ex) { 
-             System.out.println(ex.toString());   
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
         }
         return (v);
     }
-    
-     public void excluir(Vendedor vendedor) {
+
+    public void excluir(Vendedor vendedor) {
         PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement("DELETE FROM tbvendedor where Cpf_Vend = ?");
-            
+
             ps.setString(1, vendedor.getCpf());
-                      
+
             ps.execute();
         } catch (SQLException ex) {
-             System.out.println(ex.toString());   
+            System.out.println(ex.toString());
         }
     }
 }
