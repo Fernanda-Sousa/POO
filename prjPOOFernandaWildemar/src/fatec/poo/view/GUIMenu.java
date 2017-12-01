@@ -115,7 +115,7 @@ public class GUIMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemProdutosActionPerformed
 
     private void jMenuItemEmitirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEmitirPedidoActionPerformed
-        // TODO add your handling code here:
+        new GUIEmitirPedido().setVisible(true);
     }//GEN-LAST:event_jMenuItemEmitirPedidoActionPerformed
 
     private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSairActionPerformed

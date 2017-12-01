@@ -410,7 +410,7 @@ public class GUIVendedor extends javax.swing.JFrame {
                 btnExcluir.setEnabled(true);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Codigo Inválido. Digite um valor numérico!", "Código Invalido", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Informe um CPF válido!", "CPF Inválido!", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
