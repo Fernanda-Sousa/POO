@@ -12,10 +12,16 @@ import fatec.poo.control.DaoPedido;
 import fatec.poo.control.DaoProduto;
 import fatec.poo.control.DaoVendedor;
 import fatec.poo.model.Cliente;
+import fatec.poo.model.ItemPedido;
 import fatec.poo.model.Pedido;
 import fatec.poo.model.Produto;
 import fatec.poo.model.Vendedor;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,6 +35,22 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
      */
     public GUIEmitirPedido() {
         initComponents();
+        modTblPedido = ((DefaultTableModel)tblProdutos.getModel());
+    }
+    public void ValidaData(String s){
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            df.setLenient(false);
+            try{
+                df.parse(s);
+                txtCPFCliente.setEnabled(true);
+                btnPesquisaCliente.setEnabled(true);
+                txtDataPedido.setEnabled(false);
+                txtCPFCliente.requestFocus();
+                pedido = new Pedido(Integer.parseInt(txtNumPedido.getText()), txtDataPedido.getText());
+            }catch (ParseException ex){
+                JOptionPane.showMessageDialog(null, "Data Inválida");
+                txtDataPedido.setText("");
+            }
     }
 
     /**
@@ -93,6 +115,9 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Emitir Pedido");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -111,6 +136,11 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
         txtDataPedido.setEnabled(false);
 
         btnPesquisaPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/pesq.png"))); // NOI18N
+        btnPesquisaPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisaPedidoActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Número do Pedido");
 
@@ -321,7 +351,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
 
         jLabel8.setText("Valor Total do Pedido");
 
-        txtValorTotalPedido.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtValorTotalPedido.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txtValorTotalPedido.setEnabled(false);
 
         txtQtdeItensPedido.setEnabled(false);
@@ -334,17 +364,14 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Alterar.png"))); // NOI18N
         btnAlterar.setText("Alterar");
-        btnAlterar.setActionCommand("Alterar");
         btnAlterar.setEnabled(false);
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/rem.png"))); // NOI18N
         btnExcluir.setText("Excluir");
-        btnExcluir.setActionCommand("Excluir");
         btnExcluir.setEnabled(false);
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/exit.png"))); // NOI18N
         btnSair.setText("Sair");
-        btnSair.setActionCommand("Sair");
         btnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSairActionPerformed(evt);
@@ -445,6 +472,15 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
         daoItemPedido = new DaoItemPedido(conexao.conectar());
     }//GEN-LAST:event_formWindowOpened
 
+    private void btnPesquisaPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisaPedidoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPesquisaPedidoActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        conexao.fecharConexao();
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -518,7 +554,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtQtdeVendida;
     private javax.swing.JFormattedTextField txtValorTotalPedido;
     // End of variables declaration//GEN-END:variables
-    private DaoPedido daoPedido=null;
+   private DaoPedido daoPedido=null;
     private Pedido pedido=null;
     private Conexao conexao=null;
     private DaoCliente daoCliente = null;
@@ -527,11 +563,14 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
     private DaoVendedor daoVendedor = null;
     private DaoProduto daoProduto = null;
     private Produto produto = null;
-    //private DefaultTableModel modTblPedido;
+    private DefaultTableModel modTblPedido;
     private DaoItemPedido daoItemPedido = null;
-    //private ItemPedido itemPedido = null;
-    //private ArrayList<ItemPedido> itensPedidos = null;
-    //private ArrayList<ItemPedido> itensPedidosRem = null;
-    //private ArrayList<ItemPedido> itens = null;
+    private ItemPedido itemPedido = null;
+    private ArrayList<ItemPedido> itensPedidos = null;
+    private ArrayList<ItemPedido> itensPedidosRem = null;
+    private ArrayList<ItemPedido> itens = null;
+    private double valor = 0;
+    private int cont = 0;
+    private int Qtde = 0;
 
 }

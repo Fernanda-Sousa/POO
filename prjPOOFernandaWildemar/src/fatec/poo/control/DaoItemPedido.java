@@ -22,7 +22,8 @@ public class DaoItemPedido {
         PreparedStatement ps = null;
         try {
             //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("INSERT INTO ItemPedido(NrItem, Numero_Pedido, Codigo_Produto, Qt_Vendida) VALUES(?,?,?,?)");
+            ps = conn.prepareStatement("INSERT INTO tbitemPedido(NumItem_ItemPedido, Pedido_ItemPedido," +
+                                        "Produto_ItemPedido, QtdeVendida_ItemPedido) VALUES(?,?,?,?)");
             
             ps.setInt(1, itemPedido.getNumeroItem());
             ps.setInt(2, itemPedido.getPedido().getNumero());
@@ -44,13 +45,13 @@ public class DaoItemPedido {
         
         try{
             //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("Select * from ItemPedido where Numero_Pedido = ?");
+            ps = conn.prepareStatement("Select * from tbitemPedido where Pedido_ItemPedido = ?");
             ps.setInt(1, Numero);
             rs = ps.executeQuery();
             
             while(rs.next()){
-                ItemPedido itemPedido = new ItemPedido(rs.getInt("NrItem"), rs.getInt("Qt_Vendida"));
-                itemPedido.setProduto(new DaoProduto(conn).consultar(rs.getInt("Codigo_Produto")));
+                ItemPedido itemPedido = new ItemPedido(rs.getInt("numeroItem"), rs.getInt("qtdeVendida"));
+                itemPedido.setProduto(new DaoProduto(conn).consultar(rs.getInt("codigo")));
                 itemPedido.setPedido(new DaoPedido(conn).consultar(Numero));
                 itensPedidos.add(itemPedido);
             }
@@ -69,7 +70,7 @@ public class DaoItemPedido {
         
         try{
             //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("delete from ItemPedido where Numero_Pedido = ? and Codigo_Produto = ?");
+            ps = conn.prepareStatement("delete from tbitempedido where Pedido_ItemPedido = ? and Produto_ItemPedido = ?");
             ps.setInt(1, Numero);
             ps.setInt(2, Codigo);
             
@@ -89,15 +90,15 @@ public class DaoItemPedido {
         
         try{
             //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("select * from ItemPedido where Numero_Pedido = ? and Codigo_Produto = ?");
+            ps = conn.prepareStatement("select * from tbitempedido where Pedido_ItemPedido = ? and Produto_ItemPedido = ?");
             ps.setInt(1, Numero);
             ps.setInt(2, Codigo_Produto);
             
             rs = ps.executeQuery();
             
             if(rs.next()){
-                ItemPedido itemPedido = new ItemPedido(rs.getInt("NrItem"), rs.getInt("Qt_Vendida"));
-                itemPedido.setProduto(new DaoProduto(conn).consultar(rs.getInt("Codigo_Produto")));
+                ItemPedido itemPedido = new ItemPedido(rs.getInt("numeroItem"), rs.getInt("qtdeVendida"));
+                itemPedido.setProduto(new DaoProduto(conn).consultar(rs.getInt("codigo")));
                 itemPedido.setPedido(new DaoPedido(conn).consultar(Numero));
                 itensPedidos.add(itemPedido);
             }
@@ -112,8 +113,8 @@ public class DaoItemPedido {
         PreparedStatement ps = null;
         try {
             //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("UPDATE ItemPedido set  Codigo_Produto = ? ," 
-                                                + "Qt_Vendida = ?, nritem =? where Numero_Pedido = ?");
+            ps = conn.prepareStatement("UPDATE tbitempedido set  Produto_ItemPedido = ? ," 
+                                                + "QtdeVendida = ?, NumItem_ItemPedido =? where Pedido_ItemPedido = ?");
             
             ps.setInt(1, itemPedido.getProduto().getCodigo());
             ps.setInt(2, itemPedido.getQtdeVendida());
@@ -130,7 +131,7 @@ public class DaoItemPedido {
         PreparedStatement ps = null;
         try {
             //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("DELETE FROM ItemPedido where Numero_Pedido = ?");
+            ps = conn.prepareStatement("DELETE FROM tbitempedido where Pedido_ItemPedido = ?");
             
             ps.setInt(1, itemPedido.getPedido().getNumero());
                       
