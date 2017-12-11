@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,8 +41,23 @@ public class DaoCliente {
         }
     }
     
-    public void alterar(Cliente cliente) {
+    public void alterar(Cliente cliente) throws SQLException {
         PreparedStatement ps = null;
+        double LimiteAntigo = 0;
+                ps = conn.prepareStatement("SELECT LimiteCred_Cli from tbcliente where " + "Cpf_Cli = ?");
+
+            ps.setString(1, cliente.getCpf().replaceAll("[.-]", ""));
+            ResultSet rs = null;
+            rs = ps.executeQuery();
+       
+        try {
+            if (rs.next() == true) {
+                LimiteAntigo = rs.getDouble("CLI_LIM_CRED");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         try {
             ps = conn.prepareStatement("UPDATE tbcliente set Nome_Cli = ?, Endereco_Cli = ?, Cidade_Cli = ?, Cep_Cli = ?, Uf_Cli = ?, Ddd_Cli = ?, Telefone_Cli = ?, LimiteCred_Cli = ?, LimiteDisp_Cli = ? " 
                                         + "where Cpf_Cli = ?");
@@ -53,7 +70,7 @@ public class DaoCliente {
             ps.setString(6, cliente.getDdd());
             ps.setString(7, cliente.getTelefone());
             ps.setDouble(8, cliente.getLimiteCred());
-            ps.setDouble(9, cliente.getLimiteDisp());
+            ps.setDouble(9, cliente.getLimiteCred());
             ps.setString(10, cliente.getCpf());
            
             ps.execute();

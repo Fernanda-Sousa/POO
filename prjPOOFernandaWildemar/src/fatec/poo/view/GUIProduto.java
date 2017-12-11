@@ -1,15 +1,10 @@
 package fatec.poo.view;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoProduto;
 import fatec.poo.model.Produto;
-import static java.awt.SystemColor.text;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JFrame;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -71,6 +66,11 @@ public class GUIProduto extends javax.swing.JFrame {
                 txtCodigoActionPerformed(evt);
             }
         });
+        txtCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCodigoKeyTyped(evt);
+            }
+        });
 
         txtDescricao.setEnabled(false);
 
@@ -118,14 +118,29 @@ public class GUIProduto extends javax.swing.JFrame {
         });
 
         txtQtdeDisponivel.setEnabled(false);
+        txtQtdeDisponivel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtQtdeDisponivelKeyTyped(evt);
+            }
+        });
 
         jLabel4.setText("Preço Unitário");
 
         txtPrecoUnitario.setEnabled(false);
+        txtPrecoUnitario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPrecoUnitarioKeyTyped(evt);
+            }
+        });
 
         jLabel5.setText("Estoque Mínimo");
 
         txtEstoqueMinimo.setEnabled(false);
+        txtEstoqueMinimo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEstoqueMinimoKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -206,93 +221,102 @@ public class GUIProduto extends javax.swing.JFrame {
 
        
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0){
-            daoProduto.excluir(produto); 
-            
-            txtCodigo.setText("");
-            txtDescricao.setText("");
-            txtEstoqueMinimo.setText("");
-            txtPrecoUnitario.setText("");
-            txtQtdeDisponivel.setText("");
+        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0) {
+            produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
 
-            txtCodigo.setEnabled(true);
-            txtCodigo.requestFocus();
-            txtDescricao.setEnabled(false);
-            txtEstoqueMinimo.setEnabled(false);
-            txtPrecoUnitario.setEnabled(false);
-            txtQtdeDisponivel.setEnabled(false);        
-
-            btnIncluir.setEnabled(false);
-            btnConsultar.setEnabled(true);
-            btnExcluir.setEnabled(false);
+            if (produto == null) {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado ");
+            } else {
+                daoProduto.excluir(produto);
+                LimparCampos();
+                reset();
+            }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-        produto = null;
-        
-        try{
-            produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
-            if (produto == null){
-                txtCodigo.setEnabled(false);
-                txtDescricao.setEnabled(true);
-                txtDescricao.requestFocus();
-                txtEstoqueMinimo.setEnabled(true);
-                txtPrecoUnitario.setEnabled(true);
-                txtQtdeDisponivel.setEnabled(true);
-
-                btnConsultar.setEnabled(false);
-                btnIncluir.setEnabled(true);
-            }
-        else{
-            txtDescricao.setText(produto.getDescricao());
-            txtQtdeDisponivel.setText(String.valueOf(produto.getQtdeDisponivel()));
-            txtPrecoUnitario.setText(String.valueOf(produto.getPrecoUnit()));
-            txtEstoqueMinimo.setText(String.valueOf(produto.getEstoqueMin()));
-
-            txtCodigo.setEnabled(false); 
-            txtDescricao.setEnabled(true);
-            txtDescricao.requestFocus();
-            txtEstoqueMinimo.setEnabled(true);
-            txtPrecoUnitario.setEnabled(true);
-            txtQtdeDisponivel.setEnabled(true);
-
-            btnConsultar.setEnabled(false);
-            btnAlterar.setEnabled(true);
-            btnExcluir.setEnabled(true);
-        } 
-        
-       }catch(Exception e){
-            JOptionPane.showMessageDialog (null, "Codigo Inválido. Digite um valor numérico!","Código Invalido",JOptionPane.WARNING_MESSAGE);
-            txtCodigo.requestFocus();
-            txtCodigo.setText("");
-        }
-    }//GEN-LAST:event_btnConsultarActionPerformed
-
-    private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
-        produto = new Produto(Integer.parseInt(txtCodigo.getText()), txtDescricao.getText());
-        produto.setEstoqueMin(Integer.parseInt(txtEstoqueMinimo.getText()));
-        produto.setPrecoUnit(Double.parseDouble(txtPrecoUnitario.getText()));
-        produto.setQtdeDisponivel(Integer.parseInt(txtQtdeDisponivel.getText()));
-        
-        daoProduto.inserir(produto);
-         
+    
+    public void LimparCampos() {
         txtCodigo.setText(null);
         txtDescricao.setText(null);
         txtEstoqueMinimo.setText(null);
         txtPrecoUnitario.setText(null);
         txtQtdeDisponivel.setText(null);
-                
-        txtCodigo.setEnabled(true);
-        txtCodigo.requestFocus();
+
+    }
+
+    public void reset() {
+        btnConsultar.setEnabled(true);
+        btnIncluir.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
         txtDescricao.setEnabled(false);
         txtEstoqueMinimo.setEnabled(false);
         txtPrecoUnitario.setEnabled(false);
-        txtQtdeDisponivel.setEnabled(false);        
+        txtQtdeDisponivel.setEnabled(false);
+        txtCodigo.setEnabled(true);
+        txtCodigo.requestFocus();
+
+    }
+    
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        produto = null;
         
-        btnIncluir.setEnabled(false);
-        btnConsultar.setEnabled(true);
-        btnExcluir.setEnabled(false);
+          if (txtCodigo.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Ops, o campo Código está vazio!\nVerifique e tente novamente");
+            txtCodigo.requestFocus();
+        } else {
+
+            produto = daoProduto.consultar(Integer.parseInt(txtCodigo.getText()));
+
+            if (produto == null) {
+
+                btnConsultar.setEnabled(false);
+                btnIncluir.setEnabled(true);
+                btnAlterar.setEnabled(false);
+                btnExcluir.setEnabled(false);
+
+            } else {
+
+                txtDescricao.setText(produto.getDescricao());
+                txtEstoqueMinimo.setText(Integer.toString(produto.getEstoqueMin()));
+                txtPrecoUnitario.setText(String.format("%.2f",produto.getPrecoUnit()));
+                txtQtdeDisponivel.setText(Integer.toString(produto.getQtdeDisponivel()));
+
+                btnConsultar.setEnabled(false);
+                btnIncluir.setEnabled(false);
+                btnAlterar.setEnabled(true);
+                btnExcluir.setEnabled(true);
+
+            }
+
+            txtCodigo.setEnabled(false);
+            txtDescricao.setEnabled(true);
+            txtEstoqueMinimo.setEnabled(true);
+            txtPrecoUnitario.setEnabled(true);
+            txtQtdeDisponivel.setEnabled(true);
+            txtDescricao.requestFocus();
+        }
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
+       if (txtCodigo.getText().equals("") || txtDescricao.getText().equals("")
+                || txtEstoqueMinimo.getText().equals("")
+                || txtPrecoUnitario.getText().equals("")
+                || txtQtdeDisponivel.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(null, "Ops, um dos campos está vazio!\nVerifique e tente novamente");
+        }
+
+        produto = new Produto(Integer.parseInt(txtCodigo.getText()), txtDescricao.getText());
+
+        produto.setEstoqueMin(Integer.parseInt(txtEstoqueMinimo.getText()));
+        produto.setPrecoUnit(Double.parseDouble(txtPrecoUnitario.getText().replace(',', '.')));
+        produto.setQtdeDisponivel(Integer.parseInt(txtQtdeDisponivel.getText()));
+
+            daoProduto.inserir(produto);
+            reset();
+            LimparCampos();
+       
     }//GEN-LAST:event_btnIncluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
@@ -300,48 +324,86 @@ public class GUIProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0){//Sim
-           produto.setDescricao(txtDescricao.getText());
-           produto.setEstoqueMin(Integer.parseInt(txtEstoqueMinimo.getText()));
-           produto.setPrecoUnit(Double.parseDouble(txtPrecoUnitario.getText()));
-           produto.setQtdeDisponivel(Integer.parseInt(txtQtdeDisponivel.getText()));
-           
-           daoProduto.alterar(produto);
-        } 
-        
-        txtCodigo.setText(null);
-        txtDescricao.setText(null);
-        txtEstoqueMinimo.setText(null);
-        txtPrecoUnitario.setText(null);
-        txtQtdeDisponivel.setText(null);
-        
-        txtCodigo.setEnabled(true);
-        txtCodigo.requestFocus();
-        txtDescricao.setEnabled(false);
-        txtEstoqueMinimo.setEnabled(false);
-        txtPrecoUnitario.setEnabled(false);
-        txtQtdeDisponivel.setEnabled(false);        
-        
-        btnIncluir.setEnabled(false);
-        btnConsultar.setEnabled(true);
-        btnExcluir.setEnabled(false);        
+            if (txtCodigo.getText().equals("") || txtDescricao.getText().equals("")
+                || txtEstoqueMinimo.getText().equals("")
+                || txtPrecoUnitario.getText().equals("")
+                || txtQtdeDisponivel.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(null, "Ops, um dos campos está vazio!\nVerifique e tente novamente");
+        } else if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?") == 0) {
+
+            produto = new Produto(Integer.parseInt(txtCodigo.getText()), txtDescricao.getText());
+            produto.setEstoqueMin(Integer.parseInt(txtEstoqueMinimo.getText()));
+            produto.setQtdeDisponivel(Integer.parseInt(txtQtdeDisponivel.getText()));
+            produto.setPrecoUnit(Double.parseDouble(txtPrecoUnitario.getText()));
+
+            daoProduto.alterar(produto);
+            reset();
+            LimparCampos();
+        }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
-     
+        btnConsultarActionPerformed(evt);
     }//GEN-LAST:event_txtCodigoActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        conexao = new Conexao("BD1513015","BD1513015");
+//        conexao = new Conexao("BD1513015","BD1513015");
+//        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+//        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+
+conexao = new Conexao("system","rcl1230");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
-        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
         daoProduto = new DaoProduto(conexao.conectar());
+        
+        txtCodigo.requestFocus();
     }//GEN-LAST:event_formWindowOpened
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         conexao.fecharConexao();
         dispose();
     }//GEN-LAST:event_formWindowClosing
+
+    private void txtCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyTyped
+        int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+        if (txtCodigo.getText().length() >= 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCodigoKeyTyped
+
+    private void txtQtdeDisponivelKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtdeDisponivelKeyTyped
+        int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+        if (txtQtdeDisponivel.getText().length() >= 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtQtdeDisponivelKeyTyped
+
+    private void txtPrecoUnitarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecoUnitarioKeyTyped
+       int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE) && !(ascii == 44 || ascii == 46)) {
+            evt.consume();
+        }
+        if (txtPrecoUnitario.getText().length() >= 15) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPrecoUnitarioKeyTyped
+
+    private void txtEstoqueMinimoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstoqueMinimoKeyTyped
+        int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+        if (txtEstoqueMinimo.getText().length() >= 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtEstoqueMinimoKeyTyped
 
     /**
      * @param args the command line arguments

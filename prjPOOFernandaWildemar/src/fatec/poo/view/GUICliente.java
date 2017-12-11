@@ -3,7 +3,10 @@ package fatec.poo.view;
 import fatec.poo.control.Conexao;
 import fatec.poo.control.DaoCliente;
 import fatec.poo.model.Cliente;
-import fatec.poo.model.ValidarCpf;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -103,6 +106,11 @@ public class GUICliente extends javax.swing.JFrame {
                 txtTelDDDActionPerformed(evt);
             }
         });
+        txtTelDDD.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelDDDKeyTyped(evt);
+            }
+        });
 
         txtTelefone.setEnabled(false);
         txtTelefone.addActionListener(new java.awt.event.ActionListener() {
@@ -110,11 +118,21 @@ public class GUICliente extends javax.swing.JFrame {
                 txtTelefoneActionPerformed(evt);
             }
         });
+        txtTelefone.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefoneKeyTyped(evt);
+            }
+        });
 
         txtLimiteCredito.setEnabled(false);
         txtLimiteCredito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtLimiteCreditoActionPerformed(evt);
+            }
+        });
+        txtLimiteCredito.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtLimiteCreditoKeyTyped(evt);
             }
         });
 
@@ -128,6 +146,11 @@ public class GUICliente extends javax.swing.JFrame {
         txtCEP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCEPActionPerformed(evt);
+            }
+        });
+        txtCEP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCEPKeyTyped(evt);
             }
         });
 
@@ -172,6 +195,11 @@ public class GUICliente extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        txtCPF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPFActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/rem.png"))); // NOI18N
         btnExcluir.setText("Excluir");
@@ -351,48 +379,29 @@ public class GUICliente extends javax.swing.JFrame {
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
        cliente = null;
        cliente = daoCliente.consultar(txtCPF.getText());
-       ValidarCpf valida  = new ValidarCpf();
-       if (valida.validarCpf(txtCPF.getText())){
+       
+       if (Cliente.verfiricaCPF(txtCPF.getText())){
         
         
             if (cliente == null){
-                txtCPF.setEnabled(false);
-                txtNome.setEnabled(true);
-                txtNome.requestFocus();
-                txtEndereco.setEnabled(true);
-                txtCidade.setEnabled(true);
-                txtCEP.setEnabled(true);
-                txtTelDDD.setEnabled(true);
-                txtTelefone.setEnabled(true);
-                txtLimiteCredito.setEnabled(true);
-                cbxUF.setEnabled(true);
-                btnConsultar.setEnabled(false);
+                LiberarCampos();
                 btnIncluir.setEnabled(true);
+                btnExcluir.setEnabled(false);
+                btnAlterar.setEnabled(false);
             }
             else{
+                LiberarCampos();
+
                txtNome.setText(cliente.getNome());
                txtEndereco.setText(cliente.getEndereco());
                txtCidade.setText(cliente.getCidade());
                txtCEP.setText(cliente.getCep());
                txtTelDDD.setText(cliente.getDdd());
                txtTelefone.setText(cliente.getTelefone());
-               txtLimiteCredito.setText(String.valueOf(cliente.getLimiteCred()));
+               txtLimiteCredito.setText(String.format("%.2f", cliente.getLimiteCred()));
                cbxUF.setSelectedItem(cliente.getUf());
-               
-               txtCPF.setEnabled(false); 
-               txtNome.setEnabled(true);
-               txtNome.requestFocus();
-               txtEndereco.setEnabled(true);
-               txtCidade.setEnabled(true);
-               txtCEP.setEnabled(true);
-               txtTelDDD.setEnabled(true);
-               txtTelefone.setEnabled(true);
-               txtLimiteCredito.setEnabled(true);
-               cbxUF.setEnabled(true);
-
-               btnConsultar.setEnabled(false);
-               btnAlterar.setEnabled(true);
-               btnExcluir.setEnabled(true);
+               lblLimiteDisponivel.setText(String.format("%.2f", cliente.getLimiteDisp()));
+           
             } 
        }else{
            JOptionPane.showMessageDialog (null, "Informe um CPF válido!","CPF Invalido",JOptionPane.WARNING_MESSAGE);  
@@ -405,13 +414,18 @@ public class GUICliente extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxUFActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
-        cliente = new Cliente(txtCPF.getText(), txtNome.getText(), Double.parseDouble(txtLimiteCredito.getText()));
+      if (txtNome.getText().equals("") || txtLimiteCredito.getText().equals("")
+                || txtEndereco.getText().equals("") || txtCEP.getText().equals("")
+                || txtCidade.getText().equals("") || txtTelDDD.getText().equals("") || txtTelefone.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(null, "Ops, um dos campos está vazio!\nVerifique e tente novamente");
+        }else{
+        cliente = new Cliente(txtCPF.getText(), txtNome.getText(), Double.parseDouble(txtLimiteCredito.getText().replace(',', '.')));
         cliente.setEndereco(txtEndereco.getText());
         cliente.setCidade(txtCidade.getText());
         cliente.setCep(txtCEP.getText());
         cliente.setDdd(txtTelDDD.getText());
         cliente.setTelefone(txtTelefone.getText());
-        cliente.setLimiteCred(Double.parseDouble(txtLimiteCredito.getText()));
         cliente.setUf(String.valueOf(cbxUF.getSelectedItem()));
         
         daoCliente.inserir(cliente);
@@ -440,9 +454,69 @@ public class GUICliente extends javax.swing.JFrame {
         btnConsultar.setEnabled(true);
         btnIncluir.setEnabled(false);
         btnExcluir.setEnabled(false);
+      }
     }//GEN-LAST:event_btnIncluirActionPerformed
 
+    private void LiberarCampos() {
+        txtCPF.setEnabled(false);
+        txtNome.setEnabled(true);
+        txtCEP.setEnabled(true);
+        txtCidade.setEnabled(true);
+        txtTelDDD.setEnabled(true);
+        txtEndereco.setEnabled(true);
+        txtLimiteCredito.setEnabled(true);
+        txtNome.setEnabled(true);
+        txtTelefone.setEnabled(true);
+        cbxUF.setEnabled(true);
+
+        btnConsultar.setEnabled(false);
+
+        btnAlterar.setEnabled(true);
+        btnExcluir.setEnabled(true);
+
+        txtNome.requestFocus();
+    }
+
+    private void BloquearCampos() {
+        txtCPF.setEnabled(true);
+        txtNome.setEnabled(false);
+        txtCEP.setEnabled(false);
+        txtCidade.setEnabled(false);
+        txtTelDDD.setEnabled(false);
+        txtEndereco.setEnabled(false);
+        txtLimiteCredito.setEnabled(false);
+        txtNome.setEnabled(false);
+        txtTelefone.setEnabled(false);
+        cbxUF.setEnabled(false);
+        txtCPF.requestFocus();
+
+        btnConsultar.setEnabled(true);
+        btnIncluir.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+    }
+
+    private void LimparCampos() {
+        txtCPF.setText(null);
+        txtNome.setText(null);
+        txtCEP.setText(null);
+        txtCidade.setText(null);
+        txtTelDDD.setText(null);
+        txtEndereco.setText(null);
+        txtTelefone.setText(null);
+        txtLimiteCredito.setText(null);
+        lblLimiteDisponivel.setText(null);
+    }
+
+    
+    
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+       if (txtNome.getText().equals("") || txtLimiteCredito.getText().equals("")
+                || txtEndereco.getText().equals("") || txtCEP.getText().equals("")
+                || txtCidade.getText().equals("") || txtTelDDD.getText().equals("") || txtTelefone.getText().equals("")) {
+
+            JOptionPane.showMessageDialog(null, "Ops, um dos campos está vazio!\nVerifique e tente novamente");
+        } else 
         if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0){//Sim
             cliente.setNome(txtNome.getText());
             cliente.setEndereco(txtEndereco.getText());
@@ -450,68 +524,33 @@ public class GUICliente extends javax.swing.JFrame {
             cliente.setCep(txtCEP.getText());
             cliente.setDdd(txtTelDDD.getText());
             cliente.setTelefone(txtTelefone.getText());
-            cliente.setLimiteCred(Double.parseDouble(txtLimiteCredito.getText()));
+            cliente.setLimiteCred(Double.parseDouble(txtLimiteCredito.getText().replace(',', '.')));
             cliente.setUf(String.valueOf(cbxUF.getSelectedItem()));
      
-            daoCliente.alterar(cliente);
+           try {
+               daoCliente.alterar(cliente);
+           } catch (SQLException ex) {
+               Logger.getLogger(GUICliente.class.getName()).log(Level.SEVERE, null, ex);
+           }
         } 
         
-        txtCPF.setText("");
-        txtNome.setText("");
-        txtEndereco.setText("");
-        txtCidade.setText("");
-        txtCEP.setText("");
-        txtTelDDD.setText("");
-        txtTelefone.setText("");
-        txtLimiteCredito.setText("");
-        cbxUF.setSelectedItem("");
-        
-        txtCPF.setEnabled(true);
-        txtCPF.requestFocus();
-        txtNome.setEnabled(false);
-        txtEndereco.setEnabled(false);
-        txtCidade.setEnabled(false);
-        txtCEP.setEnabled(false);
-        txtTelDDD.setEnabled(false);
-        txtTelefone.setEnabled(false);
-        txtLimiteCredito.setEnabled(false);
-        cbxUF.setEnabled(false);
-
-        btnConsultar.setEnabled(true);
-        btnIncluir.setEnabled(false);
-        btnExcluir.setEnabled(false);
+            LimparCampos();
+            BloquearCampos();
+       
         
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0){
-            daoCliente.excluir(cliente); 
-            
-            txtCPF.setText("");
-            txtNome.setText("");
-            txtEndereco.setText("");
-            txtCidade.setText("");
-            txtCEP.setText("");
-            txtTelDDD.setText("");
-            txtTelefone.setText("");
-            txtLimiteCredito.setText("");
-            cbxUF.setSelectedItem("");
-
-            txtCPF.setEnabled(true);
-            txtCPF.requestFocus();
-            txtNome.setEnabled(false);
-            txtEndereco.setEnabled(false);
-            txtCidade.setEnabled(false);
-            txtCEP.setEnabled(false);
-            txtTelDDD.setEnabled(false);
-            txtTelefone.setEnabled(false);
-            txtLimiteCredito.setEnabled(false);
-            cbxUF.setEnabled(false);
-
-            btnConsultar.setEnabled(true);
-            btnIncluir.setEnabled(false);
-            btnExcluir.setEnabled(false);
-            
+      if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão?") == 0) {
+            cliente = daoCliente.consultar(txtCPF.getText());
+    
+            if (cliente == null) {
+                JOptionPane.showMessageDialog(null, "Cliente não encontrado ");
+            } else {
+                daoCliente.excluir(cliente);
+                LimparCampos();
+                BloquearCampos();
+            }        
         }
 
     }//GEN-LAST:event_btnExcluirActionPerformed
@@ -526,11 +565,64 @@ public class GUICliente extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        conexao = new Conexao("BD1513015","BD1513015");
+//        conexao = new Conexao("BD1513015","BD1513015");
+//        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
+//        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        
+        /*Conexão de casa*/
+        conexao = new Conexao("system","rcl1230");
         conexao.setDriver("oracle.jdbc.driver.OracleDriver");
-        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
+        conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
+        
+        
         daoCliente = new DaoCliente(conexao.conectar());
+        
+        txtCPF.requestFocus();
     }//GEN-LAST:event_formWindowOpened
+
+    private void txtCEPKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCEPKeyTyped
+          int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+        if (txtCEP.getText().length() >= 8) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCEPKeyTyped
+
+    private void txtLimiteCreditoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLimiteCreditoKeyTyped
+ int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE) && !(ascii == 44 || ascii == 46)) {
+            evt.consume();
+        }
+        if (txtLimiteCredito.getText().length() >= 15) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtLimiteCreditoKeyTyped
+
+    private void txtTelefoneKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefoneKeyTyped
+         int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE) && !(ascii == 44 || ascii == 46)) {
+            evt.consume();
+        }
+        if (txtTelefone.getText().length() >= 9) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTelefoneKeyTyped
+
+    private void txtTelDDDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelDDDKeyTyped
+         int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE) && !(ascii == 44 || ascii == 46)) {
+            evt.consume();
+        }
+        if (txtTelDDD.getText().length() >= 2) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTelDDDKeyTyped
+
+    private void txtCPFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPFActionPerformed
+        btnConsultarActionPerformed(evt);
+    }//GEN-LAST:event_txtCPFActionPerformed
 
     /**
      * @param args the command line arguments

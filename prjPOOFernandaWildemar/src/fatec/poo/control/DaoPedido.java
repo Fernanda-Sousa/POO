@@ -18,7 +18,7 @@ public class DaoPedido {
     }
     
     public void inserir(Pedido pedido) {
-        PreparedStatement ps = null;
+        PreparedStatement ps;
         try {
             //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
             ps = conn.prepareStatement("INSERT INTO tbpedido(Numero_Ped, Cliente_Ped, Vendedor_Ped, "

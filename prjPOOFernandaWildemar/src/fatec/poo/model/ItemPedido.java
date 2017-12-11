@@ -1,4 +1,3 @@
-
 package fatec.poo.model;
 
 /**
@@ -6,6 +5,7 @@ package fatec.poo.model;
  * @author FernandaPereiradosSa
  */
 public class ItemPedido {
+    
     private int numeroItem;
     private int qtdeVendida;
     private Pedido pedido;
@@ -14,6 +14,15 @@ public class ItemPedido {
     public ItemPedido(int numeroItem, int qtdeVendida) {
         this.numeroItem = numeroItem;
         this.qtdeVendida = qtdeVendida;
+    }
+
+//      public ItemPedido(Pedido pedido, int qtdeVendida) {
+//        this.pedido = pedido;
+//        this.qtdeVendida = qtdeVendida;
+//    }
+      
+    public int getNumeroItem() {
+        return numeroItem;
     }
 
     public int getQtdeVendida() {
@@ -25,26 +34,35 @@ public class ItemPedido {
         produto.setQtdeDisponivel(produto.getQtdeDisponivel() - qtdeVendida);
     }
 
-    public int getNumeroItem() {
-        return numeroItem;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+    
+    public double getPrecoUnitProduto(){
+        return produto.getPrecoUnit();
+    }
+    public String getDescricao(){
+        return produto.getDescricao();
+    } 
 
     public Pedido getPedido() {
         return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
     }
 
     public Produto getProduto() {
         return produto;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-        
+    public void setNumeroItem(int numeroItem) {
+        this.numeroItem = numeroItem;
     }
     
     
 }
+    
+    
+

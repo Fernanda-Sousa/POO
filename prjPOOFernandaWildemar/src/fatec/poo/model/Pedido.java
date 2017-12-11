@@ -61,12 +61,12 @@ public class Pedido {
         this.vendedor = vendedor;
     }
     
-    public void addItemPedido(ItemPedido itemPedido){
-        itensPedidos.add(itemPedido);
-        itemPedido.setPedido(this);
-//        double limite = cliente.getLimiteDisp() - ((itemPedido.getProduto().getPrecoUnit()) 
-//                                                    * (itemPedido.getQtdeVendida()));
-        cliente.setLimiteDisp(cliente.getLimiteDisp() - ((itemPedido.getProduto().getPrecoUnit()) 
-                                                    * (itemPedido.getQtdeVendida())));
+    public void addItemPedido(ItemPedido ItemP){
+        itensPedidos.add(ItemP);
+        ItemP.setPedido(this);
+        cliente.setLimiteDisp(cliente.getLimiteDisp() - (ItemP.getPrecoUnitProduto() * ItemP.getQtdeVendida()));
+    }
+    public ArrayList<ItemPedido> getItensPedido() {
+        return itensPedidos;
     }
 }

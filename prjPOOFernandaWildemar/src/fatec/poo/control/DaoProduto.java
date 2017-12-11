@@ -87,4 +87,40 @@ public class DaoProduto {
              System.out.println(ex.toString());   
         }
     }
+
+    public void atualizar(int codigo, int estoque) {
+     
+        try {
+            PreparedStatement ps = conn.prepareStatement("UPDATE tbproduto set QtdeDisponivel_Prod = ?"
+                    + "where Codigo_Prod = ?");
+
+            ps.setInt(1, estoque);
+            ps.setInt(2, codigo);
+            
+            ps.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
+        }
+    }
+
+    public int verificarEstoque(int codigo) {
+
+        int estoque = 0;
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement("SELECT * from tbproduto where Codigo_Prod = ?");
+
+            ps.setInt(1, codigo);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next() == true) {
+                estoque = rs.getInt("QtdeDisponivel_Prod");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
+        }
+
+        return estoque;
+    }
 }
