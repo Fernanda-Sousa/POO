@@ -2,7 +2,6 @@ package fatec.poo.control;
 
 import fatec.poo.model.ItemPedido;
 import fatec.poo.model.Pedido;
-import fatec.poo.model.Produto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,48 +20,24 @@ public class DaoItemPedido {
         this.conn = conn;
     }
 
-    public ArrayList<ItemPedido> consultar(int Numero) {
-        ArrayList<ItemPedido> itensPedido = new ArrayList<ItemPedido>();
-        ItemPedido item = null;
-        Pedido pedido = null;
-        Produto produto = null;
-        PreparedStatement ps = null;
-        PreparedStatement psPedido = null;
-        PreparedStatement psProduto = null;
+    public ArrayList<ItemPedido> consultar(Pedido pedido) { 
+      
+        
+        ArrayList<ItemPedido> itensPedido = new ArrayList<>();
 
         try {
-            psPedido = conn.prepareStatement("SELECT * from tbpedido where numero_ped = ?");
-            psPedido.setInt(1, Numero);
-            ResultSet rsPedido = psPedido.executeQuery();
-            if (rsPedido.next() == true) {
-                pedido = new Pedido(rsPedido.getInt("PED_NUMERO"), rsPedido.getString("PED_DATA"));
-                pedido.setCliente(null);
-                pedido.setVendedor(null);
-                if (rsPedido.getInt("PED_STATUS") == 1) {
-                    pedido.setStatus(true);
-                } else {
-                    pedido.setStatus(false);
-                }
-            }
-
-            ps = conn.prepareStatement("SELECT * from tbItemPedido where "
-                    + "numero_ped = ? ");
-            ps.setInt(1, Numero);
+            
+            PreparedStatement ps = conn.prepareStatement("SELECT * from tbItemPedido where "
+                    + "PEDIDO_ITEMPEDIDO = ? ");
+            ps.setInt(1, pedido.getNumero());
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next() == true) {
-                item = new ItemPedido(rs.getInt("produto_itempedido"), rs.getInt("qtdevendida_itemproduto"));
+            while (rs.next()) {
+                ItemPedido item = new ItemPedido(rs.getInt("PRODUTO_ITEMPEDIDO"), rs.getInt("QTDEVENDIDA_ITEMPEDIDO"));
                 item.setPedido(pedido);
-                psProduto = conn.prepareStatement("SELECT * from tbProduto where codigo_prod = ?");
-                psProduto.setInt(1, rs.getInt("produto_itempedido"));
-                ResultSet rsProduto = psProduto.executeQuery();
-                if (rsProduto.next() == true) {
-                    produto = new Produto(rsProduto.getInt("codigo_prod"), rsProduto.getString("descricao_prod"));
-                    produto.setEstoqueMin(rsProduto.getInt("estoquemin_prod"));
-                    produto.setPrecoUnit(rsProduto.getDouble("precounit_prod"));
-                    produto.setQtdeDisponivel(rsProduto.getInt("qtdedisponivel_prod"));
-                }
-                item.setProduto(produto);
+               
+                System.err.println(rs.getInt("PRODUTO_ITEMPEDIDO"));
+                
                 itensPedido.add(item);
             }
 
