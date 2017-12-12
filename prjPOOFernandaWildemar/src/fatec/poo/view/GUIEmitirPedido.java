@@ -61,7 +61,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
     }
 
     private void startconnection() {
-      //        conexao = new Conexao("BD1513015","BD1513015");
+        //        conexao = new Conexao("BD1513015","BD1513015");
 //        conexao.setDriver("oracle.jdbc.driver.OracleDriver");
 //        conexao.setConnectionString("jdbc:oracle:thin:@apolo:1521:xe");
 /*TODO Trocar antes de entregar*/
@@ -201,6 +201,11 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         ftfCPFCliente.setEnabled(false);
+        ftfCPFCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ftfCPFClienteActionPerformed(evt);
+            }
+        });
 
         txtNomeCliente.setEnabled(false);
 
@@ -542,44 +547,45 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?") == 0) {//Sim
-            //produto.setNome(txtNome.getText());
-            pedido.setCliente(daoCliente.consultar(ftfCPFCliente.getText()));
-            pedido.setVendedor(daoVendedor.consultar(ftfCPFVendedor.getText()));
-            daoPedido.alterar(pedido);
-            daoItemPedido.alterarPedido(itensPedido, pedido.getNumero());
-        }
+              if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?") == 0) {//Sim
+                //produto.setNome(txtNome.getText());
+                pedido.setCliente(daoCliente.consultar(ftfCPFCliente.getText()));
+                pedido.setVendedor(daoVendedor.consultar(ftfCPFVendedor.getText()));
+                daoPedido.alterar(pedido);
+                daoItemPedido.alterarPedido(itensPedido, pedido.getNumero());
+            }
 
-        ftfCPFCliente.setText("");
-        ftfCPFVendedor.setText("");
-        ftfData.setText("");
-        txtCodigoProd.setText("");
-        txtNumPedido.setText("");
-        txtProduto.setText("");
+            ftfCPFCliente.setText("");
+            ftfCPFVendedor.setText("");
+            ftfData.setText("");
+            txtCodigoProd.setText("");
+            txtNumPedido.setText("");
+            txtProduto.setText("");
 
-        btnIncluir.setEnabled(false);
-        txtNumPedido.setEnabled(true);
-        ftfCPFCliente.setEnabled(false);
-        ftfCPFVendedor.setEnabled(false);
-        ftfData.setEnabled(false);
-        txtCodigoProd.setEnabled(false);
+            btnIncluir.setEnabled(false);
+            txtNumPedido.setEnabled(true);
+            ftfCPFCliente.setEnabled(false);
+            ftfCPFVendedor.setEnabled(false);
+            ftfData.setEnabled(false);
+            txtCodigoProd.setEnabled(false);
 
-        txtQuantidadeVendida.setEnabled(false);
-        txtNumPedido.requestFocus();
+            txtQuantidadeVendida.setEnabled(false);
+            txtNumPedido.requestFocus();
 
-        btnPedPesquisar.setEnabled(true);
-        btnCliPesquisar.setEnabled(false);
-        btnProdPesquisar.setEnabled(false);
-        btnVendPesquisar.setEnabled(false);
-        btnRemover.setEnabled(false);
-        btnAdicionar.setEnabled(false);
-        itensPedido = null;
-        alterou = false;
-        atualizaLista();
+            btnPedPesquisar.setEnabled(true);
+            btnCliPesquisar.setEnabled(false);
+            btnProdPesquisar.setEnabled(false);
+            btnVendPesquisar.setEnabled(false);
+            btnRemover.setEnabled(false);
+            btnAdicionar.setEnabled(false);
+            itensPedido = null;
+            alterou = false;
+            atualizaLista();
     }//GEN-LAST:event_btnAlterarActionPerformed
-
+    
+    
     private void txtNumPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumPedidoKeyTyped
-        int ascii = evt.getKeyChar();
+         int ascii = evt.getKeyChar();
         if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE)) {
             evt.consume();
         }
@@ -601,7 +607,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
                 txtNumPedido.setEnabled(false);
                 ftfCPFCliente.setEnabled(true);
                 ftfCPFVendedor.setEnabled(true);
-               
+
                 ftfData.setEnabled(true);
                 btnCliPesquisar.setEnabled(true);
                 btnVendPesquisar.setEnabled(true);
@@ -616,9 +622,9 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
                 txtCodigoProd.setEnabled(true);
                 btnProdPesquisar.setEnabled(true);
                 btnAlterar.setEnabled(true);
-            
+
                 txtNumPedido.setEnabled(false);
-           
+
                 ftfData.setEnabled(false);
                 ftfData.setEditable(false);
 
@@ -636,7 +642,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
                 itensPedido = daoItemPedido.listItensPedido(Integer.toString(pedido.getNumero()));
                 atualizaLista();
             }
-        }  
+        }
     }//GEN-LAST:event_btnPedPesquisarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -647,7 +653,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
         cliente = null;
 
         if (Cliente.verfiricaCPF(ftfCPFCliente.getText()) == true) {
-         
+
             cliente = daoCliente.consultar(ftfCPFCliente.getText());
 
             if (cliente == null) {
@@ -807,7 +813,6 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
             txtProduto.setText("");
             txtNomeCliente.setText("");
             txtNomeVendedor.setText("");
-          
 
             btnIncluir.setEnabled(false);
             txtNumPedido.setEnabled(true);
@@ -849,6 +854,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
             ftfCPFVendedor.setEnabled(false);
             ftfData.setEnabled(false);
             txtNomeCliente.setEnabled(false);
+
             txtNomeVendedor.setEnabled(false);
             txtProduto.setEnabled(false);
             txtQuantidadeVendida.setEnabled(false);
@@ -876,6 +882,10 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
     private void txtNumPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumPedidoActionPerformed
         btnPedPesquisarActionPerformed(evt);
     }//GEN-LAST:event_txtNumPedidoActionPerformed
+
+    private void ftfCPFClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftfCPFClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ftfCPFClienteActionPerformed
 
     public static void main(String args[]) {
 
@@ -940,7 +950,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
     private javax.swing.JTextField txtQuantidadeVendida;
     private javax.swing.JTextField txtValorTotal;
     // End of variables declaration//GEN-END:variables
-    
+
     private DaoItemPedido daoItemPedido = null;
     private DaoPedido daoPedido = null;
     private Pedido pedido = null;

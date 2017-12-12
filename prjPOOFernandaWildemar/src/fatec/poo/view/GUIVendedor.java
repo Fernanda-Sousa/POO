@@ -157,6 +157,11 @@ public class GUIVendedor extends javax.swing.JFrame {
                 txtTaxaComissaoActionPerformed(evt);
             }
         });
+        txtTaxaComissao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTaxaComissaoKeyTyped(evt);
+            }
+        });
 
         cbxUF.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO" }));
         cbxUF.setSelectedIndex(25);
@@ -387,10 +392,10 @@ public class GUIVendedor extends javax.swing.JFrame {
                 txtCidade.setText(vendedor.getCidade());
                 txtTelDDD.setText(vendedor.getDdd());
                 txtEndereco.setText(vendedor.getEndereco());
-                txtSalarioBase.setText(String.format("%.2f",vendedor.getSalarioBase()));
+                txtSalarioBase.setText(String.format("%.2f", vendedor.getSalarioBase()));
                 txtTelefone.setText(vendedor.getTelefone());
                 cbxUF.setSelectedItem(vendedor.getUf());
-                txtTaxaComissao.setText(String.format("%.2f",vendedor.getComissao()));
+                txtTaxaComissao.setText(String.format("%.2f", vendedor.getComissao()));
                 txtNome.requestFocus();
             }
 
@@ -401,7 +406,7 @@ public class GUIVendedor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
-     private void BloquearCampos() {
+    private void BloquearCampos() {
         txtCPF.setEnabled(true);
         txtNome.setEnabled(false);
         txtCEP.setEnabled(false);
@@ -454,7 +459,7 @@ public class GUIVendedor extends javax.swing.JFrame {
 
         txtNome.requestFocus();
     }
-    
+
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
         if (txtNome.getText().equals("") || txtSalarioBase.getText().equals("") || txtTaxaComissao.getText().equals("")
                 || txtEndereco.getText().equals("") || txtCEP.getText().equals("")
@@ -462,20 +467,20 @@ public class GUIVendedor extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(null, "Ops, um dos campos está vazio!\nVerifique e tente novamente");
         } else {
-        
-        vendedor = new Vendedor(txtCPF.getText(), txtNome.getText(), Double.parseDouble(txtSalarioBase.getText().replace(',', '.')));
-        vendedor.setEndereco(txtEndereco.getText());
-        vendedor.setCidade(txtCidade.getText());
-        vendedor.setCep(txtCEP.getText());
-        vendedor.setDdd(txtTelDDD.getText());
-        vendedor.setTelefone(txtTelefone.getText());
-        vendedor.setComissao(Double.parseDouble(txtTaxaComissao.getText().replace(',', '.')));
-        vendedor.setUf(String.valueOf(cbxUF.getSelectedItem()));
 
-        daoVendedor.inserir(vendedor);
+            vendedor = new Vendedor(txtCPF.getText(), txtNome.getText(), Double.parseDouble(txtSalarioBase.getText().replace(',', '.')));
+            vendedor.setEndereco(txtEndereco.getText());
+            vendedor.setCidade(txtCidade.getText());
+            vendedor.setCep(txtCEP.getText());
+            vendedor.setDdd(txtTelDDD.getText());
+            vendedor.setTelefone(txtTelefone.getText());
+            vendedor.setComissao(Double.parseDouble(txtTaxaComissao.getText().replace(',', '.')));
+            vendedor.setUf(String.valueOf(cbxUF.getSelectedItem()));
+
+            daoVendedor.inserir(vendedor);
         }
-            LimparCampos();
-            BloquearCampos();
+        LimparCampos();
+        BloquearCampos();
 
     }//GEN-LAST:event_btnIncluirActionPerformed
 
@@ -487,23 +492,24 @@ public class GUIVendedor extends javax.swing.JFrame {
             vendedor.setCep(txtCEP.getText());
             vendedor.setDdd(txtTelDDD.getText());
             vendedor.setTelefone(txtTelefone.getText());
+            vendedor.setSalarioBase(Double.parseDouble(txtSalarioBase.getText()));
             vendedor.setComissao(Double.parseDouble(txtTaxaComissao.getText()));
             vendedor.setUf(String.valueOf(cbxUF.getSelectedItem()));
 
             daoVendedor.alterar(vendedor);
         }
 
-            LimparCampos();
-            BloquearCampos();
+        LimparCampos();
+        BloquearCampos();
 
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-         if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?") == 0) {//Sim
+        if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?") == 0) {//Sim
             daoVendedor.excluir(vendedor);
             LimparCampos();
             BloquearCampos();
-        }      
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
@@ -532,7 +538,7 @@ public class GUIVendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void txtCEPKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCEPKeyTyped
-      int ascii = evt.getKeyChar();
+        int ascii = evt.getKeyChar();
         if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE)) {
             evt.consume();
         }
@@ -552,7 +558,7 @@ public class GUIVendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelDDDKeyTyped
 
     private void txtTelefoneKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefoneKeyTyped
-      int ascii = evt.getKeyChar();
+        int ascii = evt.getKeyChar();
         if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE)) {
             evt.consume();
         }
@@ -562,7 +568,7 @@ public class GUIVendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefoneKeyTyped
 
     private void txtSalarioBaseKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSalarioBaseKeyTyped
-         int ascii = evt.getKeyChar();
+        int ascii = evt.getKeyChar();
         if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE) && !(ascii == 44 || ascii == 46)) {
             evt.consume();
         }
@@ -570,6 +576,16 @@ public class GUIVendedor extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txtSalarioBaseKeyTyped
+
+    private void txtTaxaComissaoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTaxaComissaoKeyTyped
+        int ascii = evt.getKeyChar();
+        if (!(ascii >= 48 && ascii <= 57) && !(ascii == KeyEvent.VK_BACK_SPACE) && !(ascii == 44 || ascii == 46)) {
+            evt.consume();
+        }
+        if (txtTaxaComissao.getText().length() >= 15) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTaxaComissaoKeyTyped
 
     /**
      * @param args the command line arguments
