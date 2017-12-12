@@ -52,7 +52,7 @@ public class DaoCliente {
        
         try {
             if (rs.next() == true) {
-                LimiteAntigo = rs.getDouble("CLI_LIM_CRED");
+                LimiteAntigo = rs.getDouble("LimiteCred_Cli");
             }
         } catch (SQLException ex) {
             Logger.getLogger(DaoCliente.class.getName()).log(Level.SEVERE, null, ex);
