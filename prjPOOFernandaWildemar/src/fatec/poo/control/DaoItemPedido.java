@@ -2,149 +2,126 @@ package fatec.poo.control;
 
 import fatec.poo.model.ItemPedido;
 import fatec.poo.model.Pedido;
+import fatec.poo.model.Produto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- *
- * @author Fernanda / Wildemar
- */
 public class DaoItemPedido {
 
     private Connection conn;
 
     public DaoItemPedido(Connection conn) {
         this.conn = conn;
+
     }
 
-    public ArrayList<ItemPedido> consultar(Pedido pedido) { 
-      
-        
-        ArrayList<ItemPedido> itensPedido = new ArrayList<>();
+    public ArrayList<ItemPedido> listItensPedido(String numeroPedido) {
+        ArrayList<ItemPedido> itensPedido = new ArrayList<ItemPedido>();
+        ItemPedido item = null;
+        Pedido pedido = null;
+        Produto produto = null;
+        PreparedStatement ps = null;
+        PreparedStatement psPedido = null;
+        PreparedStatement psProduto = null;
 
         try {
-            
-            PreparedStatement ps = conn.prepareStatement("SELECT * from tbItemPedido where "
-                    + "PEDIDO_ITEMPEDIDO = ? ");
-            ps.setInt(1, pedido.getNumero());
+            psPedido = conn.prepareStatement("SELECT * from tbPedido where Numero_Ped = ?");
+            psPedido.setInt(1, Integer.parseInt(numeroPedido));
+            ResultSet rsPedido = psPedido.executeQuery();
+            if (rsPedido.next() == true) {
+                pedido = new Pedido(rsPedido.getInt("NUMERO_PED"), rsPedido.getString("DATAEMISSAOPEDIDO_PED"));
+                pedido.setCliente(null);
+                pedido.setVendedor(null);
+                if (rsPedido.getInt("STATUS_PED") == 1) {
+                    pedido.setStatus(true);
+                } else {
+                    pedido.setStatus(false);
+                }
+            }
+
+            ps = conn.prepareStatement("SELECT * from tbitempedido where "
+                    + "pedido_itempedido = ? ");
+            ps.setInt(1, Integer.parseInt(numeroPedido));
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                ItemPedido item = new ItemPedido(rs.getInt("PRODUTO_ITEMPEDIDO"), rs.getInt("QTDEVENDIDA_ITEMPEDIDO"));
-                item.setPedido(pedido);
+            while (rs.next() == true) {
+                item = new ItemPedido(pedido, rs.getInt("QTDEVENDIDA_ITEMPEDIDO"));
                
-                System.err.println(rs.getInt("PRODUTO_ITEMPEDIDO"));
-                
+                psProduto = conn.prepareStatement("SELECT * from tbProduto where CODIGO_PROD = ?");
+                psProduto.setInt(1, rs.getInt("PRODUTO_ITEMPEDIDO"));
+                ResultSet rsProduto = psProduto.executeQuery();
+                if (rsProduto.next()) {
+                    produto = new Produto(rsProduto.getInt("CODIGO_PROD"), rsProduto.getString("DESCRICAO_PROD"));
+                    produto.setEstoqueMin(rsProduto.getInt("ESTOQUEMIN_PROD"));
+                    produto.setPrecoUnit(rsProduto.getDouble("PRECOUNIT_PROD"));
+                    produto.setQtdeDisponivel(rsProduto.getInt("QTDEDISPONIVEL_PROD"));
+                }
+                item.setProduto(produto);
                 itensPedido.add(item);
             }
 
         } catch (SQLException ex) {
-            System.out.println(ex.toString());
+            System.out.println(ex);
         }
         return itensPedido;
     }
 
-    public ArrayList<ItemPedido> excluirItem(Integer Numero, Integer Codigo) {
+    public void inserirItemPedido(ArrayList<ItemPedido> listaItem) {
         PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        ArrayList<ItemPedido> itensPedidos = new ArrayList<>();
+        ItemPedido item = null;
 
         try {
-            //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("delete from tbitempedido where Pedido_ItemPedido = ? and Produto_ItemPedido = ?");
-            ps.setInt(1, Numero);
-            ps.setInt(2, Codigo);
+            int i = 0;
+            while (i < listaItem.size()) {
+                item = listaItem.get(i);
+               ps = conn.prepareStatement("INSERT INTO tbitempedido(PEDIDO_ITEMPEDIDO,PRODUTO_ITEMPEDIDO, QTDEVENDIDA_ITEMPEDIDO ) VALUES(?,?,?)");
+           
 
-            ps.executeQuery();
-
-        } catch (SQLException ex) {
-            System.out.println(ex.toString());
-        }
-        return (itensPedidos);
-    }
-
-    public ArrayList<ItemPedido> consultarItem(Integer Numero, Integer Codigo_Produto) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        ArrayList<ItemPedido> itensPedidos = new ArrayList<>();
-
-        try {
-            //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("select * from tbitempedido where Pedido_ItemPedido = ? and Produto_ItemPedido = ?");
-            ps.setInt(1, Numero);
-            ps.setInt(2, Codigo_Produto);
-
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                ItemPedido itemPedido = new ItemPedido(rs.getInt("numeroItem"), rs.getInt("qtdeVendida"));
-                itemPedido.setProduto(new DaoProduto(conn).consultar(rs.getInt("codigo")));
-                itemPedido.setPedido(new DaoPedido(conn).consultar(Numero));
-                itensPedidos.add(itemPedido);
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.toString());
-        }
-        return (itensPedidos);
-    }
-
-    public void alterar(ItemPedido itemPedido) {
-        PreparedStatement ps = null;
-        try {
-            //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("UPDATE tbitempedido set  Produto_ItemPedido = ? ,"
-                    + "QtdeVendida = ?, NumItem_ItemPedido =? where Pedido_ItemPedido = ?");
-
-            ps.setInt(1, itemPedido.getProduto().getCodigo());
-            ps.setInt(2, itemPedido.getQtdeVendida());
-            ps.setInt(3, itemPedido.getNumeroItem());
-            ps.setInt(4, itemPedido.getPedido().getNumero());
-
-            ps.execute();
-        } catch (SQLException ex) {
-            System.out.println(ex.toString());
-        }
-    }
-
-    public void excluir(ItemPedido itemPedido) {
-        PreparedStatement ps = null;
-        try {
-            //TODO verificar nomes nas tabelas e colunas / colocar no mesmo padrão
-            ps = conn.prepareStatement("DELETE FROM tbitempedido where Pedido_ItemPedido = ?");
-
-            ps.setInt(1, itemPedido.getPedido().getNumero());
-
-            ps.execute();
-        } catch (SQLException ex) {
-            System.out.println(ex.toString());
-        }
-    }
-
-    public void inserirItemPedido(ArrayList<ItemPedido> itensPedido, int pedido) {
-        PreparedStatement ps;
-
-        try {
-            for (ItemPedido ip : itensPedido) {
-
-                ps = conn.prepareStatement("INSERT INTO tbitemPedido(Pedido_ItemPedido,Produto_ItemPedido, QtdeVendida_ItemPedido) VALUES(?,?,?)");
-                System.out.println("PEDIDO: " + pedido);
-                System.out.println("NUMERO DO ITEM: " + ip.getProduto().getCodigo());
-                System.out.println("QUANTIDADE: " + ip.getQtdeVendida());
-
-                ps.setInt(1, pedido);
-                ps.setInt(2, ip.getProduto().getCodigo());
-                ps.setInt(3, ip.getQtdeVendida());
+                ps.setInt(1, item.getPedido().getNumero());
+                ps.setInt(2, item.getProduto().getCodigo());
+                ps.setInt(3, item.getQtdeVendida());
                 ps.execute();
-
+                i++;
             }
         } catch (SQLException ex) {
             System.out.println(ex.toString());
         }
+
     }
+
+    public void alterarPedido(ArrayList<ItemPedido> listaItem, int codigoPedido) {
+        PreparedStatement ps = null;
+        PreparedStatement ds = null;
+        ItemPedido item = null;
+
+        try {
+            ds = conn.prepareStatement("DELETE FROM tbItemPedido where PEDIDO_ITEMPEDIDO = ?");
+            ds.setInt(1, codigoPedido);
+            ds.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
+        }
+
+        try {
+            int i = 0;
+            while (i < listaItem.size()) {
+                item = listaItem.get(i);
+                ps = conn.prepareStatement("INSERT INTO tbItemPedido(PEDIDO_ITEMPEDIDO,PRODUTO_ITEMPEDIDO,QTDEVENDIDA_ITEMPEDIDO) values"
+                        + "(?,?,?)");
+
+                ps.setInt(1, item.getPedido().getNumero());
+                ps.setInt(2, item.getProduto().getCodigo());
+                ps.setInt(3, item.getQtdeVendida());
+                ps.execute();
+                i++;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
+        }
+
+    }
+
 }

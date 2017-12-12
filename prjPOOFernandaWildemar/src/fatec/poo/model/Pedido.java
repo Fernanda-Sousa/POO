@@ -69,4 +69,9 @@ public class Pedido {
     public ArrayList<ItemPedido> getItensPedido() {
         return itensPedidos;
     }
+    
+        public boolean getStatus() {
+        return status;
+    }
+
 }

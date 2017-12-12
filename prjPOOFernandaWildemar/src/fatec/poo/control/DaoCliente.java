@@ -135,4 +135,25 @@ public class DaoCliente {
              System.out.println(ex.toString());   
         }
      }
+     
+      public double verificarLimite(String cpf) {
+        Cliente d = null;
+        double limite = 0;
+   
+        try {
+            PreparedStatement  ps = conn.prepareStatement("SELECT * from tbcliente where Cpf_Cli = ?");
+
+            ps.setString(1, cpf);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next() == true) {
+                limite = rs.getDouble("LimiteDisp_Cli");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.toString());
+        }
+        return limite;
+    }
+     
 }

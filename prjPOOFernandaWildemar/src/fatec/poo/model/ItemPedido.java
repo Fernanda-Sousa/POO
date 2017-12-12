@@ -16,10 +16,11 @@ public class ItemPedido {
         this.qtdeVendida = qtdeVendida;
     }
 
-//      public ItemPedido(Pedido pedido, int qtdeVendida) {
-//        this.pedido = pedido;
-//        this.qtdeVendida = qtdeVendida;
-//    }
+ 
+      public ItemPedido(Pedido pedido, int qtdeVendida) {
+        this.pedido = pedido;
+        this.qtdeVendida = qtdeVendida;
+    }
       
     public int getNumeroItem() {
         return numeroItem;
