@@ -786,7 +786,7 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
             pedido.setStatus(false);
 
             daoPedido.inserir(pedido);
-
+            daoCliente.alterarSaldo(txtCPFCliente.getText(), limiteCliente - Double.parseDouble(lblValorTotalPedido.getText()));
 
             daoItemPedido.inserirItemPedido(itensPedido, Integer.parseInt(txtNumPedido.getText()));
             
@@ -823,97 +823,23 @@ public class GUIEmitirPedido extends javax.swing.JFrame {
             itensPedido = null;
             pedido = null;
             
+            
+            
             atualizaLista();
             
             lblQtdeItensPedido.setText("0");
             lblValorTotalPedido.setText("0.00");
-            
+            OptionPane.showMessageDialog(null, "Pedido Incluido e aprovado com sucesso\n Limite do cliente "cliente.getNome() + "para proxima compra é: R$" + limiteCliente );
             
         }
     }//GEN-LAST:event_btnIncluirActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        try {
-            daoCliente.alterar(cliente);
-        } catch (SQLException ex) {
-            Logger.getLogger(GUIEmitirPedido.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        if (itensPedidosRem == null) {
-
-        } else {
-            for (int i = 0; i < itensPedidosRem.size(); i++) {
-                produto = daoProduto.consultar(itensPedidosRem.get(i).getProduto().getCodigo());
-                produto.setQtdeDisponivel(itensPedidosRem.get(i).getProduto().getQtdeDisponivel() + itensPedidosRem.get(i).getQtdeVendida());
-                daoProduto.alterar(produto);
-                daoItemPedido.excluirItem(itensPedidosRem.get(i).getPedido().getNumero(), itensPedidosRem.get(i).getNumeroItem());
-            }
-        }
-        txtCPFCliente.setText("");
-        txtCPFVendedor.setText("");
-        txtCodProduto.setText("");
-        txtDataPedido.setText("");
-        txtQtdeVendida.setText("");
-        txtNumPedido.setText("");
-        lblDadosCliente.setText("");
-        lblDadosVendedor.setText("");
-        lblDescricaoProduto.setText("");
-        lblQtdeItensPedido.setText("");
-        lblValorTotalPedido.setText("");
-        txtCodProduto.setEnabled(false);
-        btnPesquisaCodProduto.setEnabled(false);
-        txtQtdeVendida.setEnabled(false);
-        txtNumPedido.setEnabled(true);
-        btnPesquisaPedido.setEnabled(true);
-        btnAddItem.setEnabled(false);
-        btnRemoveItem.setEnabled(false);
-        btnIncluir.setEnabled(false);
-        btnAlterar.setEnabled(false);
-        btnExcluir.setEnabled(false);
-        modTblPedido.setRowCount(0);
-        txtNumPedido.requestFocus();
-        itensPedidosRem = null;
+      
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        itensPedidos = daoItemPedido.consultar(pedido);
-
-        for (int i = 0; i < itensPedidos.size(); i++) {
-            cliente.setLimiteDisp(cliente.getLimiteDisp() + (pedido.getItensPedido().get(i).getProduto().getPrecoUnit() * pedido.getItensPedido().get(i).getQtdeVendida()));
-            try {
-                daoCliente.alterar(cliente);
-            } catch (SQLException ex) {
-                Logger.getLogger(GUIEmitirPedido.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            produto = daoProduto.consultar(pedido.getItensPedido().get(i).getProduto().getCodigo());
-            produto.setQtdeDisponivel(pedido.getItensPedido().get(i).getProduto().getQtdeDisponivel() + pedido.getItensPedido().get(i).getQtdeVendida());
-            daoProduto.alterar(produto);
-            daoItemPedido.excluir(itensPedidos.get(i));
-        }
-        daoPedido.excluir(pedido);
-        txtCPFCliente.setText("");
-        txtCPFVendedor.setText("");
-        txtCodProduto.setText("");
-        txtDataPedido.setText("");
-        txtQtdeVendida.setText("");
-        txtNumPedido.setText("");
-        lblDadosCliente.setText("");
-        lblDadosVendedor.setText("");
-        lblDescricaoProduto.setText("");
-        lblQtdeItensPedido.setText("");
-        lblValorTotalPedido.setText("");
-        txtCodProduto.setEnabled(false);
-        btnPesquisaCodProduto.setEnabled(false);
-        txtQtdeVendida.setEnabled(false);
-        txtNumPedido.setEnabled(true);
-        btnPesquisaPedido.setEnabled(true);
-        btnAddItem.setEnabled(false);
-        btnRemoveItem.setEnabled(false);
-        btnIncluir.setEnabled(false);
-        btnAlterar.setEnabled(false);
-        btnExcluir.setEnabled(false);
-        modTblPedido.setRowCount(0);
-        txtNumPedido.requestFocus();
+       
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveItemActionPerformed

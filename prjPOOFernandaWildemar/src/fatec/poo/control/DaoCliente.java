@@ -52,7 +52,7 @@ public class DaoCliente {
        
         try {
             if (rs.next() == true) {
-                LimiteAntigo = rs.getDouble("CLI_LIM_CRED");
+                LimiteAntigo = rs.getDouble("LimiteCred_Cli");
             }
         } catch (SQLException ex) {
             Logger.getLogger(DaoCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,4 +121,18 @@ public class DaoCliente {
              System.out.println(ex.toString());   
         }
     }
+     
+     public void alterarSaldo (String CPF, double valor){
+          PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement("UPDATE tbcliente set LimiteDisp_Cli = ? " 
+                                        + "where Cpf_Cli = ?");
+            ps.setDouble(1, valor);
+            ps.setString(2, CPF);
+                      
+            ps.execute();
+        } catch (SQLException ex) {
+             System.out.println(ex.toString());   
+        }
+     }
 }

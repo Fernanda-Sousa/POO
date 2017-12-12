@@ -36,6 +36,7 @@ public class DaoPedido {
              System.out.println(ex.toString());   
         }
     }
+    
     public  Pedido consultar (Integer Numero) {
         Pedido p = null;
        
